@@ -12,7 +12,7 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    password: {
+    password: { // hay que guardar la password hasheada e idealmente con un salt
       type: DataTypes.STRING,
       allowNull: false
     },
