@@ -7,7 +7,8 @@ const { API_KEY } = process.env;
 
 const router = Router();
 
-router.get("/videogames", async (req, res, next) => {
+router.get("/users", async (req, res, next) => {
+    res.send({msg:"Hola"})
 
 });
 

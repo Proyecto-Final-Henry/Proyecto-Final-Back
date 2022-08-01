@@ -27,11 +27,12 @@ process.env.NODE_ENV === "production"? new Sequelize({
     keepAlive: true,
   },
   ssl: true,
-}) : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/proyectofinal`, {
+}) : new Sequelize(`postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/proyecto_final`, {
     logging: false,
     native: false, 
   });
   
+
 const basename = path.basename(__filename);
 
 const modelDefiners = [];
@@ -49,6 +50,7 @@ let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].s
 sequelize.models = Object.fromEntries(capsEntries);
 
 const { Song, User } = sequelize.models;
+
 
 User.belongsToMany(Song, {through: "Song_Reviews", timestamps: false});
 Song.belongsToMany(User, {through: "Song_Reviews", timestamps: false});
