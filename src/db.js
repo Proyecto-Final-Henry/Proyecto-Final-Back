@@ -29,7 +29,7 @@ let sequelize =
         ssl: true,
       })
     : new Sequelize(
-        `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/proyectofinal`, // nombre de su db local
+        `postgres://${DB_USER}:${DB_PASSWORD}@${DB_HOST}/proyecto_final`, // nombre de su db local
         { logging: false, native: false }
       );
 
@@ -49,10 +49,10 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Songs, Users } = sequelize.models;
+const { User, Song } = sequelize.models;
 
-Users.belongsToMany(Genre, {through: "Song_Reviews", timestamps: false});
-Songs.belongsToMany(Videogame, {through: "Song_Reviews", timestamps: false});
+User.belongsToMany(Song, {through: "Song_Reviews", timestamps: false});
+Song.belongsToMany(User, {through: "Song_Reviews", timestamps: false});
 
 module.exports = {
   ...sequelize.models,
