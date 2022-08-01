@@ -47,7 +47,8 @@ const login = async (req, res, next) => {
 const logout = async (req, res, next) => {
     try {
         res.clearCookie('userId');
-        res.redirect('/');
+        res.json("Logout exitoso");
+        // res.redirect('/');
     } catch (error) {
         next(error);
     };
