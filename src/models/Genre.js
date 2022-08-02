@@ -1,7 +1,7 @@
 const { DataTypes, Sequelize } = require('sequelize');
 
 module.exports = (sequelize) => {
-  sequelize.define('song', {
+  sequelize.define('genre', {
     id: {
       type: DataTypes.UUID,
       defaultValue: DataTypes.UUIDV4,
@@ -11,13 +11,5 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    genre: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
-    album: {
-      type: DataTypes.STRING,
-      allowNull: true,
-    }
   }, {timestamps: false});
 };

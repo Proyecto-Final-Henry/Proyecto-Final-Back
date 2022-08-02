@@ -49,10 +49,21 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { User, Song } = sequelize.models;
+const { Album, Artist, Genre, Playlist, Song, User } = sequelize.models;
 
+Song.belongsTo(Artist)
+Song.belongsToMany(Playlist, {through: "Playlist_Songs", timestamps: false});
+Album.belongsTo(Artist)
+Album.hasMany(Song)
+Playlist.hasMany(Song)
+Playlist.belongsTo(User)
+Genre.hasMany(Song)
 User.belongsToMany(Song, {through: "Song_Reviews", timestamps: false});
 Song.belongsToMany(User, {through: "Song_Reviews", timestamps: false});
+User.belongsToMany(Song, {through: "Liked_Songs", timestamps: false});
+Song.belongsToMany(User, {through: "Liked_Songs", timestamps: false});
+User.belongsToMany(Song, {through: "Listen_Later", timestamps: false});
+Song.belongsToMany(User, {through: "Listen_Later", timestamps: false});
 
 module.exports = {
   ...sequelize.models,
