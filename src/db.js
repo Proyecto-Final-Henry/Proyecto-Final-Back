@@ -49,21 +49,25 @@ let entries = Object.entries(sequelize.models);
 let capsEntries = entries.map((entry) => [entry[0][0].toUpperCase() + entry[0].slice(1), entry[1]]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Album, Artist, Genre, Playlist, Song, User } = sequelize.models;
+const { Album, Artist, Genre, Playlist, Review, Song, User } = sequelize.models;
 
-Song.belongsTo(Artist)
 Song.belongsToMany(Playlist, {through: "Playlist_Songs", timestamps: false});
-Album.belongsTo(Artist)
-Album.hasMany(Song)
-Playlist.hasMany(Song)
-Playlist.belongsTo(User)
-Genre.hasMany(Song)
-User.belongsToMany(Song, {through: "Song_Reviews", timestamps: false});
 Song.belongsToMany(User, {through: "Song_Reviews", timestamps: false});
-User.belongsToMany(Song, {through: "Liked_Songs", timestamps: false});
 Song.belongsToMany(User, {through: "Liked_Songs", timestamps: false});
-User.belongsToMany(Song, {through: "Listen_Later", timestamps: false});
 Song.belongsToMany(User, {through: "Listen_Later", timestamps: false});
+Song.belongsTo(Artist)
+User.belongsToMany(Song, {through: "Song_Reviews", timestamps: false});
+User.belongsToMany(Song, {through: "Liked_Songs", timestamps: false});
+User.belongsToMany(Song, {through: "Listen_Later", timestamps: false});
+User.hasMany(Review);
+Album.belongsTo(Artist);
+Album.hasMany(Song);
+Review.belongsTo(User);
+User.hasMany(Review);
+Playlist.hasMany(Song);
+Playlist.belongsTo(User);
+Genre.hasMany(Song);
+Genre.belongsToMany(Artist, {through: "Genre_Artists", timestamps: false});
 
 module.exports = {
   ...sequelize.models,
