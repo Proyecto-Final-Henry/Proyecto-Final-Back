@@ -8,4 +8,5 @@ router.get("/search", async (req, res) => {
   const result = await searchAny(query);
   res.json(result);
 });
+
 module.exports = router;
