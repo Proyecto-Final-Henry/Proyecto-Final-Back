@@ -22,7 +22,6 @@ const registrar = async (req, res) => {
     };
 };
 
-
 const confirmar = async (req ,res) => {
     const { token } = req.params
 

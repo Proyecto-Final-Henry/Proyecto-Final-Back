@@ -30,22 +30,14 @@ module.exports = (sequelize) => {
       type: DataTypes.BOOLEAN,
       defaultValue: false
     },
-    isPremium:{
-      type: DataTypes.BOOLEAN,
-      // allowNull: false,
-      defaultValue: false,
+    role: {
+      type: DataTypes.ENUM("Base", "Premium", "Admin"),
+      defaultValue: "Base"
     },
-    isPromoter:{
-      type: DataTypes.BOOLEAN,
-      // allowNull: false,
-      defaultValue: false,
+    createdDate: {
+      type: DataTypes.DATEONLY,
+      defaultValue: DataTypes.NOW,
     },
-    isAdmin:{
-      type: DataTypes.BOOLEAN,
-      // allowNull: false,
-      defaultValue: false,
-    },
-    
   }, {timestamps: false});
 };
 

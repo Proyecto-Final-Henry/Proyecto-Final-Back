@@ -14,5 +14,4 @@ router.get("/confirmar/:token" , confirmar)
 
 router.post("/login" , autenticar)
 
-
 module.exports = router;

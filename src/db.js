@@ -55,7 +55,8 @@ Song.belongsToMany(Playlist, {through: "Playlist_Songs", timestamps: false});
 Song.belongsToMany(User, {through: "Song_Reviews", timestamps: false});
 Song.belongsToMany(User, {through: "Liked_Songs", timestamps: false});
 Song.belongsToMany(User, {through: "Listen_Later", timestamps: false});
-Song.belongsTo(Artist)
+Song.belongsTo(Genre);
+Song.belongsTo(Artist);
 User.belongsToMany(Song, {through: "Song_Reviews", timestamps: false});
 User.belongsToMany(Song, {through: "Liked_Songs", timestamps: false});
 User.belongsToMany(Song, {through: "Listen_Later", timestamps: false});

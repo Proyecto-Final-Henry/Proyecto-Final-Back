@@ -11,13 +11,21 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false,
     },
-    genre: {
-      type: DataTypes.STRING,
-      allowNull: false,
-    },
     album: {
       type: DataTypes.STRING,
       allowNull: true,
-    }
+    },
+    releaseDate: {
+      type: DataTypes.DATEONLY,
+      defaultValue: DataTypes.NOW,
+    },
+    duration: {
+      type: DataTypes.INTEGER,
+      allowNull: true,
+    },
+    description:{
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
   }, {timestamps: false});
 };
