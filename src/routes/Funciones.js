@@ -1,9 +1,11 @@
 const axios = require ("axios")
 const { User } = require ("../db")
-const bcrypt = require ("bcrypt")
+const bcrypt = require ("bcrypt");
+const { emailRegistro } = require("../helpers/emailRegistro");
+const { generarJWT } = require("../helpers/generarJWT")
 
 const registrar = async (req, res) => {
-    const { email } = req.body;
+    const { email, name } = req.body;
 
     const existeUsuario = await User.findOne({ where : {email: email } });
 
@@ -16,6 +18,9 @@ const registrar = async (req, res) => {
         const usuario = await User.create(req.body)
         usuario.password = await bcrypt.hash(usuario.password , 10)
         await usuario.save()
+        //Enviar Email
+        emailRegistro({email,name,token:usuario.token})
+
         res.json(usuario)
     } catch (error) {
         console.log(error);
@@ -58,6 +63,8 @@ const autenticar = async (req,res) => {
     }
 
     if(await bcrypt.compare(password, usuario.password)){
+        usuario.token = generarJWT(usuario.id)
+        await usuario.save()
         res.json(usuario)
     } else {
         const error = new Error("El password es incorrecto")
@@ -65,8 +72,21 @@ const autenticar = async (req,res) => {
     }
 }
 
+const perfil = async (req,res) => {
+    const  usuario  = req.usuario
+
+    res.json({
+        id: usuario.id,
+        name: usuario.name,
+        email: usuario.email,
+        role: usuario.role,
+        createdDate: usuario.createdDate
+    })
+}
+
 module.exports = {
     registrar,
     confirmar,
     autenticar,
+    perfil,
 }
