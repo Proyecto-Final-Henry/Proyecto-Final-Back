@@ -17,8 +17,6 @@ const registrar = async (req, res) => {
         usuario.password = await bcrypt.hash(usuario.password , 10)
         await usuario.save()
         res.json(usuario)
-        const usuario = await User.create(req.body);
-        res.json(usuario);
     } catch (error) {
         console.log(error);
     };
@@ -67,8 +65,6 @@ const autenticar = async (req,res) => {
         return res.status(404).json({msg : error.message}) 
     }
 }
-
-
 
 module.exports = {
     registrar,

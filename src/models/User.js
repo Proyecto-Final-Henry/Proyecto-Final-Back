@@ -2,8 +2,6 @@ const { DataTypes, Sequelize } = require('sequelize');
 const { generarId } = require ("../helpers/generarId.js");
 const bcrypt = require ("bcrypt");
 
-
-
 module.exports = (sequelize) => {
   sequelize.define('user', {
     id: {
