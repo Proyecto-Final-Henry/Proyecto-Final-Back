@@ -8,7 +8,23 @@ const { registrar , confirmar , autenticar} = require("./Funciones.js")
 
 const router = Router();
 
-router.post("/", registrar)
+const isAuthenticated = (req, res, next) => {
+    if (!req.cookies.userId) {
+      return res.redirect("/login")
+    };
+    next();
+  };
+  
+  const isNotAuthenticated = (req, res, next) => {
+    if (req.cookies.userId) {
+      return res.redirect("/home")
+    };
+    next();
+  };
+
+router.post("/register", registrar, isNotAuthenticated);
+
+// router.post("/feed", isAuthenticated);
 
 router.get("/confirmar/:token" , confirmar)
 
