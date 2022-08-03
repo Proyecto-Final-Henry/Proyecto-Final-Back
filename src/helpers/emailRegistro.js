@@ -12,6 +12,16 @@ const transport = nodemailer.createTransport({
 })
 
 const emailRegistro = async (data) => {
+    //Configuracion
+    const transport = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST, //"smtp.gmail.com",
+        port: process.env.EMAIL_PORT,  // 465,
+       // secure: true,
+        auth: {
+            user: process.env.EMAIL_USER, //"mauricio.corzo47@gmail.com" CREAR UNA CUENTA DE GMAIL EXCLUSIVA PARA ESTE TRABAJO SI NO LO PERMITE EL DEPLOY  
+            pass: process.env.EMAIL_PASS //"sttnqwbeedfnyhfv"
+        }
+    })
     
     //Envio de Email
     const {email,name,token} = data
