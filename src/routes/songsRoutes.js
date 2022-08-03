@@ -13,15 +13,4 @@ const router = Router();
 
 router.use("/discogs", discogsRouter);
 
-router.post("/register", registrar);
-
-router.get("/confirmar/:token", confirmar);
-
-router.post("/login", autenticar);
-
-router.post("/sendEmailContact", sendEmailContact);
-
-router.get("/perfil", checkAutenticacion, perfil);
-
-
 module.exports = router;

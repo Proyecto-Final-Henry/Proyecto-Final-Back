@@ -42,7 +42,7 @@ const emailRegistro = async (data) => {
 const emailContact = async (data) => {
     
     //Envio de Email
-    const emailContact = 'cjfernandez29@gmail.com';
+    const emailContact = 'cjfernandez29@gmail.com'; // Email unificado nuevo
     const {email,name,message} = data
     const info = await transport.sendMail({
         from: "MUSIC APP",
