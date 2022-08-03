@@ -14,10 +14,4 @@ usersRoutes.get("/perfil", checkAutenticacion, perfil);
 
 usersRoutes.post("/sendEmailContact", sendEmailContact);
 
-
-
-
-
-
-
 module.exports =  usersRoutes 
