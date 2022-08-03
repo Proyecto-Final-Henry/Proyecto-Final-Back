@@ -1,5 +1,5 @@
 const express = require("express")
-const { registrar, confirmar, autenticar, perfil } = require("./Funciones.js");
+const { registrar, confirmar, autenticar, perfil } = require("./FuncionesUsers.js");
 const { checkAutenticacion } = require("../middelwear/authMiddelwear");
 
 const usersRoutes = express.Router()
