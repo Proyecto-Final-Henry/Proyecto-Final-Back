@@ -11,16 +11,6 @@ const transport = nodemailer.createTransport({
     }
 })
 
-// const transport = nodemailer.createTransport({
-//     host: "smtp.gmail.com",
-//     port: 465,
-//     secure: true,
-//     auth: {
-//       user: 'startupabastoz@gmail.com', 
-//       pass: 'zhesoxlpsctpjcdt',
-//     },
-// });
-
 const emailRegistro = async (data) => {
     
     //Envio de Email
@@ -56,9 +46,5 @@ const emailContact = async (data) => {
         `
     })
 }
-
-// transport.verify().then(()=>{
-//     console.log('Ready for send emailss');
-// });
 
 module.exports = { emailRegistro, emailContact }
