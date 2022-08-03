@@ -6,11 +6,9 @@ const axios = require("axios");
 const { API_KEY } = process.env;
 const { registrar, confirmar, autenticar, perfil } = require("./Funciones.js");
 const { checkAutenticacion } = require("../middelwear/authMiddelwear");
-const discogsRouter = require("./discogs-routes");
+const discogsRouter = require("./music/music-routes");
 
 const router = Router();
-
-router.use("/discogs", discogsRouter);
 
 router.post("/register", registrar);
 
