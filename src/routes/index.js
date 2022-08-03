@@ -6,7 +6,7 @@ const axios = require("axios");
 const { API_KEY } = process.env;
 const { registrar, confirmar, autenticar, perfil } = require("./Funciones.js");
 const { checkAutenticacion } = require("../middelwear/authMiddelwear");
-const discogsRouter = require("./discogs-routes.js");
+const discogsRouter = require("./discogs-routes");
 
 const router = Router();
 

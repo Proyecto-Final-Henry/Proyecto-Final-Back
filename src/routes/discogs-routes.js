@@ -1,11 +1,11 @@
 const express = require("express");
 const router = express.Router();
 
-const searchAny = require("./");
+const { searchAny } = require("./discogs-functions");
 
 router.get("/search", async (req, res) => {
-  const { query } = req.query;
-  const result = await searchAny(query);
+  const { name } = req.query;
+  const result = await searchAny(name);
   res.json(result);
 });
 
