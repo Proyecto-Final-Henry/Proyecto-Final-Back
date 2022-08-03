@@ -1,8 +1,8 @@
-const axios = require ("axios")
-const { User } = require ("../db")
+const axios = require ("axios");
+const { User } = require ("../db");
 const bcrypt = require ("bcrypt");
 const { emailRegistro } = require("../helpers/emailRegistro");
-const { generarJWT } = require("../helpers/generarJWT")
+const { generarJWT } = require("../helpers/generarJWT");
 
 const registrar = async (req, res) => {
     const { email, name } = req.body;
@@ -15,27 +15,27 @@ const registrar = async (req, res) => {
     };
 
     try {
-        const usuario = await User.create(req.body)
-        usuario.password = await bcrypt.hash(usuario.password , 10)
-        await usuario.save()
+        const usuario = await User.create(req.body);
+        usuario.password = await bcrypt.hash(usuario.password , 10);
+        await usuario.save();
         //Enviar Email
-        emailRegistro({email,name,token:usuario.token})
+        emailRegistro({email,name,token:usuario.token});
 
-        res.json(usuario)
+        res.json(usuario);
     } catch (error) {
         console.log(error);
     };
 };
 
 const confirmar = async (req ,res) => {
-    const { token } = req.params
+    const { token } = req.params;
 
-    const usuarioConfirmar = await User.findOne({ where: {token : token}})
+    const usuarioConfirmar = await User.findOne({ where: {token : token}});
 
     if(!usuarioConfirmar){
         const error = new Error ("Token no valido")
         return res.status(404).json({msg: error.message})
-    }
+    };
 
     try {
         usuarioConfirmar.token = null
@@ -44,8 +44,8 @@ const confirmar = async (req ,res) => {
         res.json({msg: "Usuario confirmado correctamente"})
     } catch (error) {
         console.log(error)
-    }
-}
+    };
+};
 
 const autenticar = async (req,res) => {
     const { email , password } = req.body
@@ -55,12 +55,12 @@ const autenticar = async (req,res) => {
     if(!usuario){
         const error = new Error ("Usuario inexistente")
         return res.status(404).json({msg: error.message})
-    }
+    };
 
     if(!usuario.confirmado){
         const error = new Error ("Tu cuenta aun no a sido confirmada")
         return res.status(403).json({msg: error.message})
-    }
+    };
 
     if(await bcrypt.compare(password, usuario.password)){
         usuario.token = generarJWT(usuario.id)
@@ -69,8 +69,8 @@ const autenticar = async (req,res) => {
     } else {
         const error = new Error("El password es incorrecto")
         return res.status(404).json({msg : error.message}) 
-    }
-}
+    };
+};
 
 const perfil = async (req,res) => {
     const  usuario  = req.usuario
@@ -81,7 +81,7 @@ const perfil = async (req,res) => {
         email: usuario.email,
         role: usuario.role,
         createdDate: usuario.createdDate
-    })
+    });
 };
 
 const sendEmailContact = async (req, res) => {
@@ -96,7 +96,7 @@ const sendEmailContact = async (req, res) => {
         }
     } catch (error) {
         return res.status(404).json({msg : error.message}) 
-    }
+    };
 };
 
 module.exports = {
@@ -105,4 +105,4 @@ module.exports = {
     autenticar,
     perfil,
     sendEmailContact,
-}
+};
