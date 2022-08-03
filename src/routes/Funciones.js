@@ -1,7 +1,7 @@
 const axios = require ("axios")
 const { User } = require ("../db")
 const bcrypt = require ("bcrypt");
-const { emailRegistro } = require("../helpers/emailRegistro");
+const { emailRegistro, emailContact } = require("../helpers/emailRegistro");
 const { generarJWT } = require("../helpers/generarJWT")
 
 const registrar = async (req, res) => {
@@ -84,9 +84,25 @@ const perfil = async (req,res) => {
     })
 }
 
+const sendEmailContact = async (req, res) => {
+    const { email, name, message } = req.body;
+    try {
+        if (name && email && message) {
+            emailContact({email, name, message})
+            res.status(200).json({email, name, message});
+        }else{
+            const error = new Error('Falta ingresar algún dato');
+            return res.status(400).json({msg: error.message});
+        }
+    } catch (error) {
+        return res.status(404).json({msg : error.message}) 
+    }
+};
+
 module.exports = {
     registrar,
     confirmar,
     autenticar,
     perfil,
+    sendEmailContact
 }
