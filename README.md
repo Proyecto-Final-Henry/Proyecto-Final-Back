@@ -11,7 +11,7 @@
     - filter STR (opcional):
       - artist
       - track (canción)
-      - release_title (album)
+      - master (album)
   - Devuelve (10 resultados)
     - if(!filter)
       - name
