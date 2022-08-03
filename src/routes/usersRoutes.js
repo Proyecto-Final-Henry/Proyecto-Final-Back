@@ -1,5 +1,5 @@
 const express = require("express")
-const { registrar, confirmar, autenticar, perfil } = require("./Funciones.js");
+const { registrar, confirmar, autenticar, perfil, sendEmailContact } = require("./Funciones.js");
 const { checkAutenticacion } = require("../middelwear/authMiddelwear");
 
 const usersRoutes = express.Router()
@@ -10,12 +10,9 @@ usersRoutes.get("/confirmar/:token", confirmar);
 
 usersRoutes.post("/login", autenticar);
 
-
-
-
 usersRoutes.get("/perfil", checkAutenticacion, perfil);
 
-
+usersRoutes.post("/sendEmailContact", sendEmailContact);
 
 
 

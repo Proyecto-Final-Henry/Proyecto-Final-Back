@@ -17,6 +17,10 @@ module.exports = (sequelize) => {
       type: DataTypes.STRING,
       allowNull: false
     },
+    userImg: {
+      type: DataTypes.STRING,
+      defaultValue:`https://cdn.pixabay.com/photo/2020/05/02/07/32/gaming-5120169_960_720.jpg`
+    },
     email: {
       type: DataTypes.STRING,
       allowNull: false,
