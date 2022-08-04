@@ -78,6 +78,7 @@ const perfil = async (req,res) => {
     res.json({
         id: usuario.id,
         name: usuario.name,
+        userImg: usuario.userImg,
         email: usuario.email,
         role: usuario.role,
         createdDate: usuario.createdDate
