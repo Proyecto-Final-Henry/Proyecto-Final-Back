@@ -76,6 +76,7 @@ Album.hasMany(Review);
 
 Artist.hasMany(Review);
 Artist.hasMany(Album);
+Artist.hasMany(Review);
 
 Review.belongsTo(User);
 Review.belongsTo(Song);

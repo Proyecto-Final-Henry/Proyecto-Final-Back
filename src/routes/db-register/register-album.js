@@ -1,12 +1,9 @@
 const { Album } = require("./../../db.js");
 
-async function registerArtist(name, apiId) {
+async function registerAlbum(name, apiId) {
   try {
     const [album, created] = await Album.findOrCreate({
-      where: { name: name },
-      defaults: {
-        apiId: apiId,
-      },
+      where: { name: name, apiId: apiId },
     });
     return { album, created };
   } catch (err) {
@@ -14,4 +11,4 @@ async function registerArtist(name, apiId) {
   }
 }
 
-module.exports(registerArtist);
+module.exports = registerAlbum;

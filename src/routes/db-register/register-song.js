@@ -1,26 +1,14 @@
 const { Song } = require("./../../db.js");
 
-async function registerSong(
-  name,
-  album,
-  releaseDate,
-  duration,
-  description,
-  apiId
-) {
+async function registerSong(name, apiId) {
   try {
     const [song, created] = await Song.findOrCreate({
-      where: { name: name },
-      defaults: {
-        apiId,
-        album,
-        releaseDate,
-        duration,
-        description,
-      },
+      where: { name: name, apiId: apiId },
     });
     return { song, created };
   } catch (err) {
-    throw new Error("Error al registrar canción");
+    throw new Error(err);
   }
 }
+
+module.exports = registerSong;
