@@ -19,7 +19,7 @@ module.exports = (sequelize) => {
     },
     userImg: {
       type: DataTypes.STRING,
-      defaultValue:`https://cdn.pixabay.com/photo/2020/05/02/07/32/gaming-5120169_960_720.jpg`
+      defaultValue:`https://cdn-icons-png.flaticon.com/512/1053/1053244.png?w=360`
     },
     email: {
       type: DataTypes.STRING,
