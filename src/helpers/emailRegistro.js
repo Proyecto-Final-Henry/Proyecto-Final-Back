@@ -1,28 +1,18 @@
 const nodemailer = require ("nodemailer")
 
-// Configuracion
-const transport = nodemailer.createTransport({
-    host: process.env.EMAIL_HOST,
-    port: process.env.EMAIL_PORT,
-    secure: true,
-    auth: {
-        user: process.env.EMAIL_USER,
-        pass: process.env.EMAIL_PASS
-    }
-})
-
 const emailRegistro = async (data) => {
-    //Configuracion
+    
+    // Configuracion
     const transport = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST, //"smtp.gmail.com",
-        port: process.env.EMAIL_PORT,  // 465,
-       // secure: true,
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        // secure: true,
         auth: {
-            user: process.env.EMAIL_USER, //"mauricio.corzo47@gmail.com" CREAR UNA CUENTA DE GMAIL EXCLUSIVA PARA ESTE TRABAJO SI NO LO PERMITE EL DEPLOY  
-            pass: process.env.EMAIL_PASS //"sttnqwbeedfnyhfv"
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
         }
     })
-    
+
     //Envio de Email
     const {email,name,token} = data
     const info = await transport.sendMail({
@@ -40,6 +30,16 @@ const emailRegistro = async (data) => {
     console.log("Mensaje enviado: %s", info.messageId)
 }
 const emailContact = async (data) => {
+    // Configuracion
+    const transport = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        // secure: true,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    })
     
     //Envio de Email
     const emailContact = 'cjfernandez29@gmail.com';

@@ -8,6 +8,9 @@ const { registrar, confirmar, autenticar, perfil, sendEmailContact } = require("
 const { checkAutenticacion } = require("../middelwear/authMiddelwear");
 
 const discogsRouter = require("./discogs-routes");
+const genresRouter = require("./genres/genres-routes");
+const artistsRouter = require("./artists/artists-routes");
+const albumsRouter = require("./albums/albums-routes");
 
 const router = Router();
 
@@ -23,5 +26,17 @@ router.post("/sendEmailContact", sendEmailContact);
 
 router.get("/perfil", checkAutenticacion, perfil);
 
+
+// Routes of Genres
+router.get("/genres", genresRouter);
+router.get("/genresartists", genresRouter);
+// Routes of Artists
+router.get("/artists", artistsRouter);
+router.get("/artistsongs", artistsRouter);
+router.get("/artistsongstop", artistsRouter);
+
+// Routes of Artists
+router.get("/albums", albumsRouter);
+router.get("/albumsongs", albumsRouter);
 
 module.exports = router;
