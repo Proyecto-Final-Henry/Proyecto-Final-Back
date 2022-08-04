@@ -2,7 +2,9 @@ const axios = require ("axios");
 const { User } = require ("../db");
 const bcrypt = require ("bcrypt");
 const { emailRegistro } = require("../helpers/emailRegistro");
+const { emailOlvidePassword } = require("../helpers/emailOlvidePassword.js")
 const { generarJWT } = require("../helpers/generarJWT");
+const { generarId } = require("../helpers/generarId.js")
 
 const registrar = async (req, res) => {
     const { email, name } = req.body;
@@ -81,9 +83,72 @@ const perfil = async (req,res) => {
         userImg: usuario.userImg,
         email: usuario.email,
         role: usuario.role,
-        createdDate: usuario.createdDate
+        createdDate: usuario.createdDate,
+        userImg: usuario.userImg,
     });
 };
+
+const olvidePassword = async (req, res) => {
+    const { email } = req.body;
+
+    const usuarioExiste = await User.findOne({ where: { email : email }})
+
+    if(!usuarioExiste){
+        const error = new Error("El usuario no existe")
+        return res.status(400).json({msg: error.message})
+    }
+
+    try {
+        usuarioExiste.token = generarId()
+        await usuarioExiste.save()
+
+        //Envio de Email
+        emailOlvidePassword({
+            email,
+            name: usuarioExiste.name,
+            token: usuarioExiste.token
+        })
+
+        res.json({msg: "Hemos enviado el mail con las instrucciones"})
+
+    } catch (error) {
+        console.log(error)
+    }
+};
+
+const comprobarToken = async (req, res) => {
+    const { token } = req.params
+
+    const tokenValido = await User.findOne({ where: { token : token }})
+    
+    if(tokenValido){
+        res.json({msg:"Token valido y el usuario existe"})
+    } else {
+        const error = new Error("Token no valido")
+        return res.status(400).json({msg: error.message})
+    }
+}
+
+const nuevaPassword = async (req, res) => {
+    const { token } = req.params;
+    const { password } = req.body;
+
+    const usuario = await User.findOne({ where: { token: token }})
+    console.log(usuario)
+    if(!usuario){
+        const error = new Error("Hubo un error")
+        return res.status(400).json({msg: error.message})
+    }
+
+    try {
+        usuario.token = null
+        usuario.password = await bcrypt.hash(password , 10)
+        await usuario.save()
+        res.json({msg: "Password modificada correctamente"})
+    } catch (error) {
+        console.log(error)
+    }
+}
 
 const sendEmailContact = async (req, res) => {
     const { email, name, message } = req.body;
@@ -106,4 +171,7 @@ module.exports = {
     autenticar,
     perfil,
     sendEmailContact,
+    olvidePassword,
+    comprobarToken,
+    nuevaPassword
 };
