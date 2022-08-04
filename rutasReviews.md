@@ -18,8 +18,6 @@
       - id de la api Deezer **NO de la base de datos**
     - name
       - nombre del artista, album o canción
-    - resourceId
-      - para asociarla con un recurso específico, ya sea de api o de db
 
 - ruta para borrado lógico de reviews (pendiente)
 
