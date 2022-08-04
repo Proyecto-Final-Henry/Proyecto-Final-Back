@@ -1,5 +1,5 @@
 const { Router } = require("express");
-const { registrar, confirmar, autenticar, perfil, sendEmailContact } = require("./FuncionesUsers.js");
+const { registrar, confirmar, autenticar, perfil } = require("./FuncionesUsers.js");
 const { checkAutenticacion } = require("../middelwear/authMiddelwear");
 const discogsRouter = require("./music/music-routes");
 

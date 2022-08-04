@@ -1,12 +1,11 @@
-
 const express = require('express');
 const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
-const routes = require('./routes/songsRoutes.js');
 const cors = require("cors");
-const  usersRoutes  = require('./routes/usersRoutes.js');
-const  songsRoutes  = require("./routes/music/music-routes");
+const reviewRoutes = require('./routes/songsRoutes.js');
+const usersRoutes  = require('./routes/usersRoutes.js');
+const songsRoutes  = require("./routes/music/music-routes");
 
 require("./db.js");
 
@@ -30,6 +29,7 @@ server.use((req, res, next) => {
   next();
 });
 
+server.use("/api/back-end/reviews", reviewRoutes)
 server.use('/api/back-end/users', usersRoutes);
 server.use('/api/back-end/songs', songsRoutes);
 
