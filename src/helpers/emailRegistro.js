@@ -19,7 +19,7 @@ const emailRegistro = async (data) => {
         to: email,
         subject: "Comprueba tu cuenta en MUSIC APP",
         text: "Comprueba tu cuenta en MUSIC APP",
-        html: `<p>Hola: ${name}, comprueba tu cuenta en MUSIC APP.</p>
+        html: `<p>Hola ${name}, comprueba tu cuenta en MUSIC APP.</p>
         <p> Tu cuenta ya esta lista, solo debes comprobarla en el siguiente enlace:
         <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
 
