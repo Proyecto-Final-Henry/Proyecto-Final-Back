@@ -25,6 +25,7 @@ server.use((req, res, next) => {
   next();
 });
 
+server.use("/api/back-end", routes)
 server.use('/api/back-end/users', usersRoutes);
 
 // Error catching endware.
