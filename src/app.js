@@ -3,9 +3,12 @@ const cookieParser = require('cookie-parser');
 const bodyParser = require('body-parser');
 const morgan = require('morgan');
 const cors = require("cors");
-const reviewRoutes = require('./routes/songsRoutes.js');
+const reviewRoutes = require('./routes/reviews/reviewsRoutes.js');
 const usersRoutes  = require('./routes/usersRoutes.js');
 const songsRoutes  = require("./routes/music/music-routes");
+const genresRoutes  = require("./routes/genres/genres-routes");
+const artistsRoutes  = require("./routes/artists/artists-routes");
+const albumsRoutes  = require("./routes/albums/albums-routes");
 
 require("./db.js");
 
@@ -32,6 +35,9 @@ server.use((req, res, next) => {
 server.use("/api/back-end/reviews", reviewRoutes)
 server.use('/api/back-end/users', usersRoutes);
 server.use('/api/back-end/songs', songsRoutes);
+server.use('/api/back-end/genres', genresRoutes);
+server.use('/api/back-end/artists', artistsRoutes);
+server.use('/api/back-end/albums', albumsRoutes);
 
 // Error catching endware.
 server.use((err, req, res, next) => {
