@@ -1,3 +1,5 @@
+const { Review, User} = require("../../db")
+
 const crear =  async (req, res, next) => {
     try {
 
@@ -10,16 +12,16 @@ const crear =  async (req, res, next) => {
         
         const posts =  await userDb.countReviews()
         
-        console.log(posts)
         
         if (userDb.role === "Base" && posts >= 5) {
-            console.log("se corto")
             res.send("Ya ha alcanzado la cantidad maxima de reviews posibles para el servicio base")
         } else {
 
             await userDb.addReview(reviewCreated.id)
+
+            await reviewCreated.reload()
             
-            res.send()
+            res.send(reviewCreated)
             
         }
     } catch (error) {
@@ -27,6 +29,52 @@ const crear =  async (req, res, next) => {
     }
 };
 
+const modificar = async (req, res, next) => {
+    try {
+
+        const {id} = req.params
+
+        const { title, score, description} = req.body
+        
+        const reviewDb = await Review.findByPk(id)
+
+        if (title) {
+            reviewDb.title = title
+        }
+
+        if (score) {
+            reviewDb.score = score
+        }
+
+        if (description) {
+            reviewDb.description = description
+        }
+
+        await reviewDb.save()
+
+        res.send(reviewDb)
+
+    } catch (error) {
+        next(error)
+    }
+}
+
+const getReview = async (req, res, next) => {
+    try {
+
+        const {id} = req.params
+
+        const reviewDb = await Review.findByPk(id)
+
+        res.send(reviewDb)
+
+    } catch (error) {
+        next(error)
+    }
+}
+
 module.exports = {
     crear,
+    modificar,
+    getReview
 };
