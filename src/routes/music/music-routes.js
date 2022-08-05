@@ -9,7 +9,7 @@ router.get("/search", async (req, res) => {
     const result = await search(query, filter);
     return res.json(result);
   } catch (err) {
-    return res.status.json({ error: err.message });
+    return res.status(400).json({ error: err.message });
   }
 });
 
