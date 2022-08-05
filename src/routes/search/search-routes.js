@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getsearch } = require("./search-functions");
+const { getsearch, getSearchDb } = require("./search-functions");
 
 router.get("/", async (req, res) => {
     const { query, index, filter } = req.query;
@@ -16,6 +16,19 @@ router.get("/", async (req, res) => {
         console.log(error);
     }
 
+})
+
+router.get("/db", async (req, res, next) => {
+
+    const { id, type } = req.query;
+    try {
+
+        const result = await getSearchDb(id, type, next);
+        res.send(result);
+
+    } catch (error) {
+        next(error);
+    }
 })
 
 module.exports = router;

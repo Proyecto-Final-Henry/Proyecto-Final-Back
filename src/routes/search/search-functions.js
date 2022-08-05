@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { Review, Artist, Album, Song } = require("../../db")
 
 const limit= 10;  // aqui se fija el limite de items a traer de la api
 
@@ -80,4 +81,56 @@ async function getsearch(query,index,filter) {
     }
   }
 
-module.exports = {getsearch};
+
+  const getSearchDb = async (id, type, next) => {
+    try {
+
+        switch (type) {
+            case "artist":
+                const artistDb = await Artist.findOne({
+                    where: { apiId: id},
+                    include: [{
+                        model: Review
+                    }]
+                })
+            
+                if (artistDb) {
+                  return(artistDb)
+                } else {
+                  return("No se encontro un artista con ese id en la base de datos")
+                };
+            case "song":
+                const songDb = await Song.findOne({
+                    where: { apiId: id},
+                    include: [{
+                        model: Review
+                    }]
+                })
+              
+                  if (songDb) {
+                    return(songDb)
+                  } else {
+                    return("No se encontro una canción con ese id en la base de datos")
+                  };
+            case "album":
+                const albumDb = await Album.findOne({
+                    where: { apiId: id},
+                    include: [{
+                        model: Review
+                    }]
+                });
+              
+                  if (albumDb) {
+                    return(albumDb)
+                  } else {
+                    return("No se encontro un album con ese id en la base de datos")
+                  };
+            default:
+                return("Informacion insuficiente para realizar la busqueda")
+        }
+    } catch (error) {
+      next(error)
+    }
+  }
+
+module.exports = {getsearch, getSearchDb};
