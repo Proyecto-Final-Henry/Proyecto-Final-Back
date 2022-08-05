@@ -1,5 +1,7 @@
 const axios = require("axios");
 
+const limit= 10
+
 async function getsearch(query,index,filter) {
     let ruta= 'https://api.deezer.com/search'
     const responseAlbumMap= (response)=>{
@@ -49,17 +51,26 @@ async function getsearch(query,index,filter) {
     }
     
     try {
-      const response = await axios.get(`${ruta}?q=${query}&index=${index}`)
+      const response = await axios.get(`${ruta}?q=${query}&index=${index}&limit=${limit}`)
                               .then(response => {
+                                let prev= undefined
+                                let next= undefined
+                                if(response.data.prev){
+                                    prev=true
+                                }
+                                if(response.data.next){
+                                    next=true
+                                }
+                                const pagination= {total: response.data.total, prev: prev, next:next, limit:limit}
                                 switch (filter) {
                                     case "album":
-                                        return responseAlbumMap(response)                                                                         
+                                        return {data:responseAlbumMap(response), ...pagination}
                                     case "artist":
-                                        return responseArtistMap(response)
+                                        return  {data:responseArtistMap(response),...pagination}
                                     case "track":
-                                        return responseMap(response)                                    
+                                        return {data:responseMap(response),...pagination}                                    
                                     default:
-                                        return responseMap(response)
+                                        return {data:responseMap(response),...pagination}
                                   }
                                 
                               });
