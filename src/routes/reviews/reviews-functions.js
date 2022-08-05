@@ -21,7 +21,7 @@ const crear = async (req, res, next) => {
       return res.send(
         "Ya ha alcanzado la cantidad maxima de reviews posibles para el servicio base"
       );
-    }
+    };
 
     await userDb.addReview(reviewCreated.id);
 
@@ -38,14 +38,14 @@ const crear = async (req, res, next) => {
         const { artist } = await registerArtist(name, apiId);
         await artist.addReview(reviewCreated.id);
         break;
-    }
+    };
 
     await reviewCreated.reload();
 
     res.send(reviewCreated);
   } catch (error) {
     next(error);
-  }
+  };
 };
 
 const modificar = async (req, res, next) => {
@@ -58,22 +58,22 @@ const modificar = async (req, res, next) => {
 
     if (title) {
       reviewDb.title = title;
-    }
+    };
 
     if (score) {
       reviewDb.score = score;
-    }
+    };
 
     if (description) {
       reviewDb.description = description;
-    }
+    };
 
     await reviewDb.save();
 
     res.send(reviewDb);
   } catch (error) {
     next(error);
-  }
+  };
 };
 
 const getReview = async (req, res, next) => {
@@ -88,10 +88,10 @@ const getReview = async (req, res, next) => {
       const allReview = await Review.findAll();
 
       res.send(allReview);
-    }
+    };
   } catch (error) {
     next(error);
-  }
+  };
 };
 
 const getUserReview = async (req, res, next) => {
@@ -108,10 +108,10 @@ const getUserReview = async (req, res, next) => {
       res.send(userReviews);
     } else {
       res.send("El usuario no tiene reviews publicadas");
-    }
+    };
   } catch (error) {
     next(error);
-  }
+  };
 };
 
 module.exports = {

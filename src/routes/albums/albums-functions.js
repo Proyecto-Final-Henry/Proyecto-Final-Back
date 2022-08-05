@@ -14,11 +14,10 @@ async function getAlbum(id) {
                                 }
                             });
     return response;
-
   } catch (err) {
     throw new Error("couldn't find what you needed");
-  }
-}
+  };
+};
 
 async function getAlbumSongs(id) {
   try {
@@ -31,14 +30,14 @@ async function getAlbumSongs(id) {
                               duration : item.duration,
                               preview : item.preview,
                               artist : {idArtist: item.artist.id, nameArtist: item.artist.name}
-                          }
-                      })
-                    })
+                          };
+                      });
+                    });
     return response;
   } catch (err) {
     throw new Error("couldn't find what you needed");
-  }
-}
+  };
+};
 
 
 module.exports = { getAlbum, getAlbumSongs };

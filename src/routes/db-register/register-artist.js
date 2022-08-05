@@ -8,7 +8,7 @@ async function registerArtist(name, apiId) {
     return { artist, created };
   } catch (err) {
     throw new Error("Error al registrar artista");
-  }
-}
+  };
+};
 
 module.exports = registerArtist;

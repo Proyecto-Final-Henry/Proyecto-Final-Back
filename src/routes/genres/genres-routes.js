@@ -1,7 +1,5 @@
-
 const express = require("express");
 const router = express.Router();
-
 const { getGenre,getGenres,getGenreArtists  } = require("./genres-functions");
 
 router.get("/", async (req, res) => {
@@ -16,9 +14,9 @@ router.get("/", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-    }
-
+    };
 });
+
 router.get("/genresartists", async (req, res) => {
     const { genre } = req.query;
     try {
@@ -30,7 +28,7 @@ router.get("/genresartists", async (req, res) => {
         }
     } catch (error) {
         console.log(error);
-    }
+    };
 });
 
 module.exports = router;

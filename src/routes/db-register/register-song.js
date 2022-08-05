@@ -8,7 +8,7 @@ async function registerSong(name, apiId) {
     return { song, created };
   } catch (err) {
     throw new Error(err);
-  }
-}
+  };
+};
 
 module.exports = registerSong;

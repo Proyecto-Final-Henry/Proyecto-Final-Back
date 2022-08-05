@@ -1,5 +1,4 @@
 const axios = require("axios");
-
 const { CONSUMER_KEY, CONSUMER_SECRET } = process.env;
 
 async function search(query, filter) {
@@ -34,7 +33,7 @@ async function search(query, filter) {
       return results;
     } catch (err) {
       throw new Error("¡No encontramos lo que buscas!");
-    }
+    };
   } else {
     try {
       const response = await axios.get(
@@ -54,9 +53,9 @@ async function search(query, filter) {
       return results;
     } catch (err) {
       throw new Error("¡No encontramos lo que buscas!");
-    }
-  }
-}
+    };
+  };
+};
 
 module.exports = { search };
 
@@ -67,6 +66,6 @@ module.exports = { search };
 //     );
 //     let data = response.results.map(r => {
 //       name: title
-//     })
-//   }
-// }
+//     });
+//   };
+// };
