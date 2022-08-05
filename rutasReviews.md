@@ -4,17 +4,20 @@
 
   - recieves:
     - title
+      - título de la review
     - score
+      - INT 0-5
     - description
+      - texto de review
     - userId
-    - resourceType (missing)
-      - song, album, artist
+      - necesita ser un usuario registrado
+    - type
+      - STR **song || album || artist**
       - para identificar con cuál tabla cruzar la review
-      - para contenido creado por admins, promotores
-    - resourceId
-      - para asociarla con un recurso específico, ya sea de api o de db
-  - returns:
-    - review id
+    - apiId
+      - id de la api Deezer **NO de la base de datos**
+    - name
+      - nombre del artista, album o canción
 
 - ruta para borrado lógico de reviews (pendiente)
 

@@ -3,10 +3,7 @@ const { Artist } = require("./../../db.js");
 async function registerArtist(name, apiId) {
   try {
     const [artist, created] = await Artist.findOrCreate({
-      where: { name: name },
-      defaults: {
-        apiId: apiId,
-      },
+      where: { name: name, apiId: apiId },
     });
     return { artist, created };
   } catch (err) {
@@ -14,4 +11,4 @@ async function registerArtist(name, apiId) {
   }
 }
 
-module.exports(registerArtist);
+module.exports = registerArtist;
