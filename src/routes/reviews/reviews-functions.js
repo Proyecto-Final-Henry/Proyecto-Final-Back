@@ -6,6 +6,17 @@ const registerSong = require("../db-register/register-song");
 const crear = async (req, res, next) => {
   try {
     const { title, score, description, userId, type, apiId, name } = req.body;
+    
+    
+    const userDb = await User.findByPk(userId);
+    const posts = await userDb.countReviews();
+    
+        if (userDb.role === "Base" && posts >= 5) {
+          return res.send(
+            "Ya ha alcanzado la cantidad maxima de reviews posibles para el servicio base"
+          );
+        };
+
 
     const reviewCreated = await Review.create({
       title,
@@ -13,15 +24,7 @@ const crear = async (req, res, next) => {
       description,
     });
 
-    const userDb = await User.findByPk(userId);
-
-    const posts = await userDb.countReviews();
-
-    if (userDb.role === "Base" && posts >= 5) {
-      return res.send(
-        "Ya ha alcanzado la cantidad maxima de reviews posibles para el servicio base"
-      );
-    };
+    
 
     await userDb.addReview(reviewCreated.id);
 
@@ -85,7 +88,11 @@ const getReview = async (req, res, next) => {
 
       res.send(reviewDb);
     } else {
-      const allReview = await Review.findAll();
+      const allReview = await Review.findAll({
+        include: {
+          model: User
+        }
+      });
 
       res.send(allReview);
     };
