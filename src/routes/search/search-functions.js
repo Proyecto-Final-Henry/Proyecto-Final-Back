@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const limit= 10  // aqui se fija el limite de items a traer de la api
+const limit= 10;  // aqui se fija el limite de items a traer de la api
 
 async function getsearch(query,index,filter) {
     let ruta= 'https://api.deezer.com/search'
@@ -13,8 +13,8 @@ async function getsearch(query,index,filter) {
             type: item.type,
             artist: item.artist.name,
             img: item.cover_big
-            }
-        })
+            };
+        });
     };
     const responseMap= (response)=>{
         return response.data.data.map(item => {
@@ -25,8 +25,8 @@ async function getsearch(query,index,filter) {
             type: item.type,
             artist: item.artist.name,
             img: item.album.cover_big
-            }
-        })
+            };
+        });
     };
     const responseArtistMap= (response)=>{
         return response.data.data.map(item => {
