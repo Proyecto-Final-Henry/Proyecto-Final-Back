@@ -1,5 +1,5 @@
 const nodemailer = require ("nodemailer")
-const sgMail = require('@sendgrid/mail');
+//const sgMail = require('@sendgrid/mail');   // Yo Cristhian Alban comente esta linea por que me estaba rompiendo el back, era de madrugada y no queria molestar a nadie
 
 
 const emailRegistro =  async (data) => {
