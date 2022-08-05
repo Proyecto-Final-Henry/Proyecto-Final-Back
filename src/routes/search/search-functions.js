@@ -2,6 +2,18 @@ const axios = require("axios");
 
 async function getsearch(query,index,filter) {
     let ruta= 'https://api.deezer.com/search'
+    const responseAlbumMap= (response)=>{
+        return response.data.data.map(item => {
+            return {
+            id : item.id,
+            title: item.title,
+            name:item.name,
+            type: item.type,
+            artist: item.artist.name,
+            img: item.cover_big
+            }
+        })
+    };
     const responseMap= (response)=>{
         return response.data.data.map(item => {
             return {
@@ -9,17 +21,19 @@ async function getsearch(query,index,filter) {
             title: item.title,
             name:item.name,
             type: item.type,
-            artist: item.artist.name
+            artist: item.artist.name,
+            img: item.album.cover_big
             }
         })
     };
-    const responseArtisMap= (response)=>{
+    const responseArtistMap= (response)=>{
         return response.data.data.map(item => {
             return {
             id : item.id,
             title: item.title,
             name:item.name,
             type: item.type,
+            img: item.picture_big
             }
         })
     };
@@ -39,9 +53,9 @@ async function getsearch(query,index,filter) {
                               .then(response => {
                                 switch (filter) {
                                     case "album":
-                                        return responseMap(response)                                                                         
+                                        return responseAlbumMap(response)                                                                         
                                     case "artist":
-                                        return responseArtisMap(response)
+                                        return responseArtistMap(response)
                                     case "track":
                                         return responseMap(response)                                    
                                     default:
