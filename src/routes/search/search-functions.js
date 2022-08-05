@@ -1,6 +1,6 @@
 const axios = require("axios");
 
-const limit= 10
+const limit= 10  // aqui se fija el limite de items a traer de la api
 
 async function getsearch(query,index,filter) {
     let ruta= 'https://api.deezer.com/search'
