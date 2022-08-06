@@ -5,6 +5,14 @@ const { emailRegistro } = require("../helpers/emailRegistro");
 const { emailOlvidePassword } = require("../helpers/emailOlvidePassword.js")
 const { generarJWT } = require("../helpers/generarJWT");
 const { generarId } = require("../helpers/generarId.js")
+const mercadopago = require("mercadopago")
+
+mercadopago.configure({
+    access_token: "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161"
+    // NUMERO DE TARJETA : 4509 9535 6623 3704
+    // CODIGO DE SEGURIDAD : 123
+    // VENCIMIENTO : 11/25
+})
 
 const registrar = async (req, res) => {
     const { email, name } = req.body;
@@ -150,6 +158,45 @@ const nuevaPassword = async (req, res) => {
     }
 }
 
+const crearPagoMELI = async (req , res) => {
+    const { usuario } = req
+	const id = usuario.id
+	let preference = {
+		items: [
+			{
+				title: req.body.description,
+				unit_price: Number(req.body.price),
+				quantity: Number(req.body.quantity),
+			}
+		],
+		back_urls: {
+			success: `http://localhost:3001/api/back-end/users/feedback/${id}`,
+			failure: `http://localhost:3001/api/back-end/users/feedback/${id}`,
+			pending: `http://localhost:3001/api/back-end/users/feedback/${id}`
+		},
+		 auto_return: "approved",
+	};
+     try {    
+	const response = await mercadopago.preferences.create(preference)
+    res.json( {id : response.body} )
+     } catch (error) {
+        console.log(error)
+     }
+};
+
+const baseApremium = async (req,res) => {
+    const {id } = req.params
+	const usuario = await User.findOne({ where: { id: id}})
+	console.log(usuario.name)
+	console.log(req.query.status)
+	if(req.query.status === "approved"){
+		usuario.role = "Premium"
+		await usuario.save()
+	}
+    res.redirect(`http://localhost:3000/user`)
+}
+
+
 const sendEmailContact = async (req, res) => {
     const { email, name, message } = req.body;
     try {
@@ -173,5 +220,7 @@ module.exports = {
     sendEmailContact,
     olvidePassword,
     comprobarToken,
-    nuevaPassword
+    nuevaPassword,
+    crearPagoMELI,
+    baseApremium
 };

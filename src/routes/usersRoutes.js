@@ -1,8 +1,15 @@
 const express = require("express")
-const { registrar, confirmar, autenticar, perfil, sendEmailContact, olvidePassword, comprobarToken, nuevaPassword } = require("./FuncionesUsers.js");
+const { registrar, confirmar, autenticar, perfil, sendEmailContact, olvidePassword, comprobarToken, nuevaPassword, crearPagoMELI, baseApremium } = require("./FuncionesUsers.js");
 const { checkAutenticacion } = require("../middelwear/authMiddelwear");
 
+
 const usersRoutes = express.Router()
+
+
+
+usersRoutes.post("/create_preference" , checkAutenticacion, crearPagoMELI ); // tarjetas adentro de la funcion crearPagoMELI
+
+usersRoutes.get(`/feedback/:id`, baseApremium )
 
 usersRoutes.post("/register", registrar);
 
