@@ -195,7 +195,7 @@ const baseApremium = async (req,res) => {
             await usuario.save();
         }
         res.redirect(`http://localhost:3000/pay/success`);
-        window.close("http://localhost:3000/pay"); //testeando cosas
+        res.window.close("http://localhost:3000/pay"); //testeando cosas
     } catch (error) {
         console.log(error);
         res.redirect(`http://localhost:3000/pay/error`);
