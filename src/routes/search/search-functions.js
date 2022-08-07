@@ -86,7 +86,7 @@ async function getsearch(query, index, filter) {
       });
     return response;
   } catch (err) {
-    throw new Error("couldn't find what you needed");
+    res.json("No se encontro lo que buscabas :(");
   }
 }
 
