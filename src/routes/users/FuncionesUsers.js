@@ -189,11 +189,18 @@ const baseApremium = async (req,res) => {
 	const usuario = await User.findOne({ where: { id: id}});
 	console.log(usuario.name);
 	console.log(req.query.status);
-	if(req.query.status === "approved"){
-		usuario.role = "Premium";
-		await usuario.save();
-	}
-    res.redirect(`http://localhost:3000/user`);
+    try {
+        if(req.query.status === "approved"){
+            usuario.role = "Premium";
+            await usuario.save();
+        }
+        res.redirect(`http://localhost:3000/pay/success`);
+        window.close("http://localhost:3000/pay"); //testeando cosas
+    } catch (error) {
+        console.log(error);
+        res.redirect(`http://localhost:3000/pay/error`);
+    }
+
 };
 
 
