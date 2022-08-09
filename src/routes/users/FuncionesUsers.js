@@ -175,6 +175,13 @@ const crearPagoMELI = async (req , res) => {
 			pending: `http://localhost:3001/api/back-end/users/feedback/${id}`
 		},
 		 auto_return: "approved",
+         payment_methods: {
+            excluded_payment_types: [
+                {
+                    id: "ticket"
+                }
+            ],
+            }
 	};
      try {    
 	const response = await mercadopago.preferences.create(preference);
@@ -191,20 +198,18 @@ const baseApremium = async (req,res) => {
 	console.log(req.query.status);
     if(req.query.status === "approved"){
         try {
-            if(req.query.status === "approved"){
-                usuario.role = "Premium";
-                await usuario.save();
-            }
-            res.redirect(`http://localhost:3000/success`);
-            // res.window.close("http://localhost:3000/pay"); //testeando cosas
+            usuario.role = "Premium";
+            await usuario.save();
+            res.redirect(`http://localhost:3000/pay/success`);
         } catch (error) {
-            console.log(error);
-            res.redirect(`http://localhost:3000/pay/error`);
-        }
-    } else {
-        res.redirect(`http://localhost:3000/feed`)
-    };
-};
+        console.log(error);
+        res.redirect(`http://localhost:3000/pay/error`);
+    }
+} else {
+    res.redirect(`http://localhost:3000/feed`)
+}
+
+}
 
 
 const sendEmailContact = async (req, res) => {
