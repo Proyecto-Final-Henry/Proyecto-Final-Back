@@ -10,6 +10,7 @@ const genresRoutes  = require("./routes/genres/genres-routes");
 const artistsRoutes  = require("./routes/artists/artists-routes");
 const albumsRoutes  = require("./routes/albums/albums-routes");
 const searchRoutes  = require('./routes/search/search-routes');
+const userRoutes = require("./routes/user/user-routes")
 
 require("./db.js");
 
@@ -33,6 +34,7 @@ server.use((req, res, next) => {
   next();
 });
 
+server.use("/api/back-end/user", userRoutes)
 server.use("/api/back-end/reviews", reviewRoutes);
 server.use('/api/back-end/users', usersRoutes);
 server.use('/api/back-end/songs', songsRoutes);
