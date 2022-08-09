@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getArtist,getArtists,getArtistSongs,getArtistSongsTop } = require("./artists-functions");
+const { getArtist,getArtists,getArtistSongs,getArtistSongsTop,getArtistAlbums } = require("./artists-functions");
 
 router.get("/", async (req, res) => {
     const { artist } = req.query;
@@ -22,6 +22,20 @@ router.get("/artistsongs", async (req, res) => {
     try {
         if (artist) {
             const result = await getArtistSongs(artist);
+            res.status(200).json(result);
+        } else {
+            console.log("error on artists-routes");
+        };
+    } catch (error) {
+        console.log(error);
+    };
+});
+
+router.get("/artistalbums", async (req, res) => {
+    const { artist } = req.query;
+    try {
+        if (artist) {
+            const result = await getArtistAlbums(artist);
             res.status(200).json(result);
         } else {
             console.log("error on artists-routes");
