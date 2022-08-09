@@ -32,7 +32,6 @@ const emailRegistro =  async (data) => {
     console.log("Mensaje enviado: %s", info.messageId)
 
 
-
     //                                                   ¡¡¡¡¡¡¡¡¡¡¡ENVIO DE EMAIL REALES!!!!!!!!!!!!!!! NO BORRARR!!!!!!!
 //     const {email,name,token} = data
 //     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -52,11 +51,6 @@ const emailRegistro =  async (data) => {
 //     console.log("MENSAJE ENVIADO CORRECTAMENTE")
 
 }
-
-
-
-
-
 
 const emailContact = async (data) => {
     // Configuracion
