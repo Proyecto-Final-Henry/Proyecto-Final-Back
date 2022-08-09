@@ -35,6 +35,24 @@ async function getArtists() {
   };
 };
 
+async function getArtistAlbums(id) {
+  try {
+    const response = await axios.get(`https://api.deezer.com/artist/${id}/albums`)
+                      .then(response => {
+                        return response.data.data.map(item => {
+                          return{
+                              id : item.id,
+                              title: item.title,
+                              genre_id: item.genre_id,
+                              img: item.cover_big
+                          };
+                      });
+                    });
+    return response;
+  } catch (err) {
+    throw new Error("couldn't find what you needed");
+  };
+};
 async function getArtistSongs(id) {
   try {
     const response = await axios.get(`https://api.deezer.com/artist/${id}/top?limit=50`)
@@ -75,4 +93,4 @@ async function getArtistSongsTop(id) {
   };
 };
 
-module.exports = { getArtist,getArtists,getArtistSongs,getArtistSongsTop };
+module.exports = { getArtist,getArtists,getArtistSongs,getArtistSongsTop,getArtistAlbums };
