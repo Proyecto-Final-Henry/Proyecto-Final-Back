@@ -1,7 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-const { search, getRandomSongs } = require("./music-functions");
+const { search, getRandomSongs, getSongDetail } = require("./music-functions");
 
 router.get("/search", async (req, res) => {
   try {
@@ -10,9 +10,11 @@ router.get("/search", async (req, res) => {
     return res.json(result);
   } catch (err) {
     return res.status(400).json({ error: err.message });
-  };
+  }
 });
 
-router.get("/random", getRandomSongs)
+router.get("/random", getRandomSongs);
+
+router.get("/", getSongDetail);
 
 module.exports = router;
