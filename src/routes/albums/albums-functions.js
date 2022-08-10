@@ -1,6 +1,6 @@
 const axios = require("axios");
-const { Op } = require ("sequelize")
-const { Album, Genre } = require ("../../db.js")
+const { Op } = require ("sequelize");
+const { Album, Genre } = require ("../../db.js");
 
 async function getAlbum(id) {
   try {
@@ -53,8 +53,8 @@ async function createAlbums(req, res, next) {
 
     if (!AlbumFind.length) {
       for (let i = 0; i < 20; i++) {
-        const random = getRandomInt(100000, 999999)
-        const response = await axios.get(`https://api.deezer.com/album/${random}`)
+        const random = getRandomInt(100000, 999999);
+        const response = await axios.get(`https://api.deezer.com/album/${random}`);
         if (response.data.title) {
           let newAlbum = await Album.create({
             id: response.data.id,
@@ -65,7 +65,7 @@ async function createAlbums(req, res, next) {
           });
 
           if (response.data.genres && response.data.genres.data && response.data.genres.data.lenght > 1) {
-            let genreMap = response.data.genres.data.map(g => g.name)
+            let genreMap = response.data.genres.data.map(g => g.name);
             if (genreMap) {
               for (let i = 0; i < genreMap.length; i++) {
                 let genreDB = await Genre.findByPk(genreMap[i]);
@@ -75,12 +75,11 @@ async function createAlbums(req, res, next) {
           };
         };
 
-
       };
-      let newAlbums = await Album.findAll({include: Genre})
-      return res.json(newAlbums)
+      let newAlbums = await Album.findAll({include: Genre});
+      return res.json(newAlbums);
     } else {
-      return res.json(AlbumDbCheck)
+      return res.json(AlbumFind);
     }
   } catch (error) {
     next(error);
@@ -89,8 +88,8 @@ async function createAlbums(req, res, next) {
 
 async function getAlbums(req, res, next) {
   try {
-    let AllAlbums = await Album.findAll() //{include: Genre}
-    return res.json(AllAlbums)
+    let AllAlbums = await Album.findAll(); //{include: Genre}
+    return res.json(AllAlbums);
   } catch (error) {
     next(error);
   };
