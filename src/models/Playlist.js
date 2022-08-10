@@ -10,10 +10,6 @@ module.exports = (sequelize) => {
     name: {
       type: DataTypes.STRING,
       allowNull: false,
-    },
-    genres: {
-      type: DataTypes.ARRAY(DataTypes.STRING),
-      allowNull: false,
-    },
+    }
   }, {timestamps: false});
 };
