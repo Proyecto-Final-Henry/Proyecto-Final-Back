@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getAlbum, getAlbumSongs } = require("./albums-functions");
+const { getAlbum, getAlbumSongs, createAlbums, getAlbums } = require("./albums-functions");
 
 router.get("/", async (req, res) => {
     const { album } = req.query;
@@ -29,5 +29,9 @@ router.get("/albumsongs", async (req, res) => {
         console.log(error);
     };
 });
+
+router.get("/create", createAlbums);
+
+router.get("/getall", getAlbums);
 
 module.exports = router;

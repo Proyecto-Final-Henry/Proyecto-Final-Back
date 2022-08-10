@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getGenre,getGenres,getGenreArtists  } = require("./genres-functions");
+const { getGenre,getGenres,getGenreArtists, createGenre } = require("./genres-functions");
 
 router.get("/", async (req, res) => {
     const { genre } = req.query;
@@ -30,5 +30,7 @@ router.get("/genresartists", async (req, res) => {
         console.log(error);
     };
 });
+
+router.get("/create", createGenre);
 
 module.exports = router;

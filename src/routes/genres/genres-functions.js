@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { Genre } = require ("../../db.js")
 
 async function getGenre(id) {
   try {
@@ -55,4 +56,23 @@ async function getGenreArtists(id) {
   };
 };
 
-module.exports = { getGenre,getGenres,getGenreArtists };
+async function createGenre() {
+  try {
+    const response = await axios.get(`https://api.deezer.com/genre`);
+
+    for (let i = 0; i <= response.data.data.length; i++) {
+      await Genre.bulkCreate({ 
+        id : response.data.data.id,
+        name: response.data.data.name,
+        image : response.data.data.picture_big
+      });
+    };
+
+    let allGenre = await Genre.findAll();
+
+    return allGenre;
+  } catch(error) {
+    return error;
+  };
+};
+module.exports = { getGenre, getGenres, getGenreArtists, createGenre };

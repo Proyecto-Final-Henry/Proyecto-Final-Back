@@ -71,6 +71,7 @@ User.belongsToMany(Song, { through: "Listen_Later", timestamps: false });
 User.hasMany(Review); // written reviews
 
 Album.belongsTo(Artist);
+Album.belongsToMany(Genre, { through: "Album_Genre", timestamps: false });;
 Album.hasMany(Song);
 Album.hasMany(Review);
 
@@ -88,6 +89,7 @@ Playlist.belongsTo(User);
 
 Genre.hasMany(Song);
 Genre.belongsToMany(Artist, { through: "Genre_Artists", timestamps: false });
+Genre.belongsToMany(Album, { through: "Album_Genre", timestamps: false });;
 
 module.exports = {
   ...sequelize.models,

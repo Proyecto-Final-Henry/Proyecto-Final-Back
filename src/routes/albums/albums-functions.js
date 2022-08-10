@@ -1,4 +1,6 @@
 const axios = require("axios");
+const { Op } = require ("sequelize")
+const { Album, Genre } = require ("../../db.js")
 
 async function getAlbum(id) {
   try {
@@ -39,5 +41,59 @@ async function getAlbumSongs(id) {
   };
 };
 
+async function createAlbums(req, res, next) {
+  try {
+    function getRandomInt(min, max) {
+      min = Math.ceil(min);
+      max = Math.floor(max);
+      return Math.floor(Math.random() * (max - min) + min);
+    };
 
-module.exports = { getAlbum, getAlbumSongs };
+    let AlbumFind = await Album.findAll({include: Genre}); //{include: Genre}
+
+    if (!AlbumFind.length) {
+      for (let i = 0; i < 20; i++) {
+        const random = getRandomInt(100000, 999999)
+        const response = await axios.get(`https://api.deezer.com/album/${random}`)
+        if (response.data.title) {
+          let newAlbum = await Album.create({
+            id: response.data.id,
+            title: response.data.title,
+            duration : response.data.duration,
+            image : response.data.cover_big,
+            release_date: response.data.cover_big,
+          });
+
+          if (response.data.genres && response.data.genres.data && response.data.genres.data.lenght > 1) {
+            let genreMap = response.data.genres.data.map(g => g.name)
+            if (genreMap) {
+              for (let i = 0; i < genreMap.length; i++) {
+                let genreDB = await Genre.findByPk(genreMap[i]);
+                await newAlbum.addGenres(genreDB);
+              };
+            };
+          };
+        };
+
+
+      };
+      let newAlbums = await Album.findAll({include: Genre})
+      return res.json(newAlbums)
+    } else {
+      return res.json(AlbumDbCheck)
+    }
+  } catch (error) {
+    next(error);
+  };
+};
+
+async function getAlbums(req, res, next) {
+  try {
+    let AllAlbums = await Album.findAll() //{include: Genre}
+    return res.json(AllAlbums)
+  } catch (error) {
+    next(error);
+  };
+};
+
+module.exports = { getAlbum, getAlbumSongs, createAlbums, getAlbums };

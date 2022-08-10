@@ -64,13 +64,12 @@ async function getRandomSongs(req, res, next) {
       min = Math.ceil(min);
       max = Math.floor(max);
       return Math.floor(Math.random() * (max - min) + min);
-    }
+    };
 
-    let songs = []
-    let count = 0
+    let songs = [];
+    let count = 0;
 
     do {
-
       count++
       const random = getRandomInt(230000, 320000)
       const result = await axios.get(`https://api.deezer.com/track/${random}`)
@@ -88,22 +87,13 @@ async function getRandomSongs(req, res, next) {
       
     } while (count < 10);
 
-    res.send(songs)
+    res.send(songs);
     
   } catch (error) {
-    next(error)
-  }
-}
+    next(error);
+  };
+};
 
-module.exports = { search, getRandomSongs };
 
-// if(filter === 'track'){
-//   try{
-//     const response = await axios.get(
-//       `https://api.discogs.com/database/search?${filter}=${query}&key=${CONSUMER_KEY}&secret=${CONSUMER_SECRET}&page=1&per_page=20`
-//     );
-//     let data = response.results.map(r => {
-//       name: title
-//     });
-//   };
-// };
+
+module.exports = { search, getRandomSongs, };
