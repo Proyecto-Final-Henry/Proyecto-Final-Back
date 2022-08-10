@@ -70,6 +70,8 @@ User.belongsToMany(Song, { through: "Liked_Songs", timestamps: false });
 User.belongsToMany(Song, { through: "Listen_Later", timestamps: false });
 User.hasMany(Review); // written reviews
 
+User.hasMany(Playlist)
+
 User.belongsToMany(User, { as: "followers" ,through: "User_Followers", foreignKey: "follower_id", otherKey: "following_id",timestamps: false })
 User.belongsToMany(User, { as: "following" ,through: "User_Followers", foreignKey: "following_id", otherKey: "follower_id" ,timestamps: false })
 
@@ -87,7 +89,8 @@ Review.belongsTo(Song);
 Review.belongsTo(Album);
 Review.belongsTo(Artist);
 
-Playlist.hasMany(Song);
+Playlist.belongsToMany(Song, { through: "Playlist_Songs", timestamps: false });
+// Playlist.hasMany(Song);
 Playlist.belongsTo(User);
 
 Genre.hasMany(Song);

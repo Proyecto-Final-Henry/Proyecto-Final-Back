@@ -11,6 +11,7 @@ const artistsRoutes  = require("./routes/artists/artists-routes");
 const albumsRoutes  = require("./routes/albums/albums-routes");
 const searchRoutes  = require('./routes/search/search-routes');
 const userRoutes = require("./routes/user/user-routes")
+const playlistRoutes = require("./routes/playlist/playlist-routes")
 
 require("./db.js");
 
@@ -34,6 +35,7 @@ server.use((req, res, next) => {
   next();
 });
 
+server.use("/api/back-end/playlist", playlistRoutes)
 server.use("/api/back-end/user", userRoutes)
 server.use("/api/back-end/reviews", reviewRoutes);
 server.use('/api/back-end/users', usersRoutes);
