@@ -10,8 +10,8 @@ const checkAutenticacion = async (req,res,next) => {
             token = req.headers.authorization.split(" ")[1]
             const decodificarToken = jwt.verify(token, process.env.JWT_SECRET)
             
-            req.usuario = await User.findByPk(decodificarToken.id)
-            console.log(decodificarToken.id)
+            req.usuario = await User.findOne({where:{email: decodificarToken.email}})
+            
             
             return next()
 
