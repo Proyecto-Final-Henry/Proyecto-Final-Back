@@ -1,5 +1,7 @@
 const axios = require("axios");
 
+const limit = 20; // aqui se fija el limite de items a traer de la api
+
 async function getArtist(id) {
   try {
     const response = await axios.get(`https://api.deezer.com/artist/${id}`)
@@ -53,19 +55,36 @@ async function getArtistAlbums(id) {
     throw new Error("couldn't find what you needed");
   };
 };
-async function getArtistSongs(id) {
+async function getArtistSongs(id,index) {
   try {
-    const response = await axios.get(`https://api.deezer.com/artist/${id}/top?limit=50`)
+    const response = await axios.get(`https://api.deezer.com/artist/${id}/top?limit=${limit}&index=${index}`)
                       .then(response => {
-                        return response.data.data.map(item => {
-                          return{
-                              id : item.id,
-                              title: item.title,
-                              duration : item.duration,
-                              preview : item.preview,
-                              album : {idAlbum: item.album.id, titleAlbum : item.album.title, imageAlbum : item.album.cover_big}
-                          };
-                      });
+                        let prev = undefined;
+                        let next = undefined;
+                        if (response.data.prev) {
+                          prev = true;
+                        }
+                        if (response.data.next) {
+                          next = true;
+                        }
+                        const pagination = {
+                          total: response.data.total,
+                          prev: prev,
+                          next: next,
+                          limit: limit,
+                        };
+                        return {
+                          data: response.data.data.map(item => {
+                              return{
+                                  id : item.id,
+                                  title: item.title,
+                                  duration : item.duration,
+                                  preview : item.preview,
+                                  album : {idAlbum: item.album.id, titleAlbum : item.album.title, imageAlbum : item.album.cover_big}
+                              };
+                          }),
+                          ...pagination
+                        };
                     });
     return response;
   } catch (err) {
