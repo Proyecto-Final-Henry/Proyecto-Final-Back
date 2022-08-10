@@ -59,13 +59,17 @@ async function getGenreArtists(id) {
 async function createGenre() {
   try {
     const response = await axios.get(`https://api.deezer.com/genre`);
+    
+    let genreCheck = await Genre.findAll();
 
-    for (let i = 0; i <= response.data.data.length; i++) {
-      await Genre.bulkCreate({ 
-        id : response.data.data.id,
-        name: response.data.data.name,
-        image : response.data.data.picture_big
-      });
+    if(!genreCheck.length) {
+      for (let i = 0; i <= 5; i++) { //response.data.data.length
+        await Genre.create({ 
+          id : response.data.data.id,
+          name: response.data.data.name,
+          image : response.data.data.picture_big
+        });
+      };
     };
 
     let allGenre = await Genre.findAll();

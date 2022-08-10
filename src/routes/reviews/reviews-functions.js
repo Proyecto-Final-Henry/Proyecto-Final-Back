@@ -14,7 +14,7 @@ const crear = async (req, res, next) => {
       return res.send(
         "Ya ha alcanzado la cantidad maxima de reviews posibles para el servicio base"
       );
-    }
+    };
 
     const reviewCreated = await Review.create({
       title,
@@ -37,7 +37,7 @@ const crear = async (req, res, next) => {
         const { artist } = await registerArtist(name, apiId);
         await artist.addReview(reviewCreated.id);
         break;
-    }
+    };
 
     await reviewCreated.reload();
 
@@ -57,22 +57,22 @@ const modificar = async (req, res, next) => {
 
     if (title) {
       reviewDb.title = title;
-    }
+    };
 
     if (score) {
       reviewDb.score = score;
-    }
+    };
 
     if (description) {
       reviewDb.description = description;
-    }
+    };
 
     await reviewDb.save();
 
     res.send(reviewDb);
   } catch (error) {
     next(error);
-  }
+  };
 };
 
 const getReview = async (req, res, next) => {
@@ -94,7 +94,7 @@ const getReview = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
-  }
+  };
 };
 
 const getUserReview = async (req, res, next) => {
@@ -114,7 +114,7 @@ const getUserReview = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
-  }
+  };
 };
 
 const getResourceReviews = async (req, res, next) => {
