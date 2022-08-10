@@ -74,7 +74,6 @@ async function createAlbums(req, res, next) {
             };
           };
         };
-
       };
       let newAlbums = await Album.findAll({include: Genre});
       return res.json(newAlbums);
