@@ -6,14 +6,8 @@ const { emailOlvidePassword } = require("../../helpers/emailOlvidePassword.js")
 const { generarJWT } = require("../../helpers/generarJWT");
 const { generarId } = require("../../helpers/generarId.js");
 const mercadopago = require("mercadopago");
-
-mercadopago.configure({
-    access_token: "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161"
-    // NUMERO DE TARJETA : 4509 9535 6623 3704
-    // CODIGO DE SEGURIDAD : 123
-    // VENCIMIENTO : 11/25
-});
-
+ 
+ 
 const registrar = async (req, res) => {
     const { email, name } = req.body;
 
@@ -73,7 +67,7 @@ const autenticar = async (req,res) => {
     };
 
     if(await bcrypt.compare(password, usuario.password)){
-        usuario.token = generarJWT(usuario.id)
+        usuario.token = generarJWT(usuario.email)
         await usuario.save()
         res.json(usuario)
     } else {
@@ -158,6 +152,13 @@ const nuevaPassword = async (req, res) => {
     };
 };
 
+mercadopago.configure({
+    access_token: "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161"
+    // NUMERO DE TARJETA : 4509 9535 6623 3704
+    // CODIGO DE SEGURIDAD : 123
+    // VENCIMIENTO : 11/25
+});
+
 const crearPagoMELI = async (req , res) => {
     const { usuario } = req;
 	const id = usuario.id;
@@ -211,6 +212,30 @@ const baseApremium = async (req,res) => {
 
 }
 
+const googleLogin = async (req, res) => {
+   const { email , emailVerified} = req.body
+
+   if(emailVerified){
+    const usuario = await User.findOne({ where: { email : email } } )
+
+    if(usuario){
+       return res.json(usuario)
+    } 
+    try {
+        const nuevoUsuario = await User.create(req.body)
+        nuevoUsuario.token = generarJWT(nuevoUsuario.email)
+        nuevoUsuario.confirmado = true
+        await nuevoUsuario.save()
+        res.json(nuevoUsuario)
+    } catch (error) {
+        console.log(error)
+    }
+
+   } else {
+    const error = new Error ("Ups algo salio mal")
+    return res.status(400).json({msg: error.message})
+   }
+}
 
 const sendEmailContact = async (req, res) => {
     const { email, name, message } = req.body;
@@ -238,4 +263,5 @@ module.exports = {
     nuevaPassword,
     crearPagoMELI,
     baseApremium,
+    googleLogin
 };
