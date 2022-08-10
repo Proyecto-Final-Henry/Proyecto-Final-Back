@@ -33,7 +33,7 @@ async function search(query, filter) {
       return results;
     } catch (err) {
       throw new Error("¡No encontramos lo que buscas!");
-    }
+    };
   } else {
     try {
       const response = await axios.get(
@@ -53,12 +53,13 @@ async function search(query, filter) {
       return results;
     } catch (err) {
       throw new Error("¡No encontramos lo que buscas!");
-    }
-  }
-}
+    };
+  };
+};
 
 async function getRandomSongs(req, res, next) {
   try {
+
     function getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
@@ -69,14 +70,28 @@ async function getRandomSongs(req, res, next) {
     let count = 0;
 
     do {
-      count++;
-      const random = getRandomInt(230000, 320000);
-      const result = await axios.get(`https://api.deezer.com/track/${random}`);
+      count++
+      const random = getRandomInt(230000, 320000)
+      const result = await axios.get(`https://api.deezer.com/track/${random}`)
+      songs.push({
+        id: result.data.id,
+        title: result.data.title,
+        name: result.data.name,
+        artist: result.data.artist.name,
+        artistId: result.data.artist.id,
+        img: result.data.album.cover_big,
+        album: result.data.album.title,
+        albumId: result.data.album.id,
+      });
+      
+    } while (count < 10);
 
+    res.send(songs);
+    
   } catch (error) {
     next(error);
-  }
-}
+  };
+};
 
 async function getSongDetail(req, res, next) {
   const songId = req.query.id;
@@ -99,8 +114,8 @@ async function getSongDetail(req, res, next) {
       return res.json(song);
     } catch (err) {
       next(err);
-    }
-  }
-}
+    };
+  };
+};
 
 module.exports = { search, getRandomSongs, getSongDetail };
