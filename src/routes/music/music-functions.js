@@ -93,6 +93,29 @@ async function getRandomSongs(req, res, next) {
   };
 };
 
+async function getSongDetail(req, res, next) {
+  const songId = req.query.id;
+  if (!songId) {
+    return res.json({ error: "Id de canción es necesario" });
+  } else {
+    try {
+      let result = await axios.get(`https://api.deezer.com/track/${songId}`);
+      let song = {
+        id: result.data.id,
+        title: result.data.title,
+        preview: result.data.preview,
+        duration: result.data.duration,
+        artist: result.data.artist.name,
+        artistId: result.data.artist.id,
+        img: result.data.album.cover_big,
+        album: result.data.album.title,
+        albumId: result.data.album.id,
+      };
+      return res.json(song);
+    } catch (err) {
+      next(err);
+    };
+  };
+};
 
-
-module.exports = { search, getRandomSongs, };
+module.exports = { search, getRandomSongs, getSongDetail };
