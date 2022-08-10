@@ -1,6 +1,5 @@
 const express = require("express");
 const router = express.Router();
-
 const { search, getRandomSongs, getSongDetail } = require("./music-functions");
 
 router.get("/search", async (req, res) => {
