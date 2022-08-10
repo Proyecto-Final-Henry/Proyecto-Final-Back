@@ -18,10 +18,10 @@ router.get("/", async (req, res) => {
 
 });
 router.get("/artistsongs", async (req, res) => {
-    const { artist } = req.query;
+    const { artist, index } = req.query;
     try {
         if (artist) {
-            const result = await getArtistSongs(artist);
+            const result = await getArtistSongs(artist, index);
             res.status(200).json(result);
         } else {
             console.log("error on artists-routes");
