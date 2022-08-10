@@ -15,11 +15,11 @@ module.exports = (sequelize) => {
     },
     password: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: true
     },
     userImg: {
       type: DataTypes.STRING,
-      defaultValue:`https://cdn-icons-png.flaticon.com/512/1053/1053244.png?w=360`
+      defaultValue:`https://cdn-icons-png.flaticon.com/512/1053/1053244.png?w=360`,
     },
     email: {
       type: DataTypes.STRING,
