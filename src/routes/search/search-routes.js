@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getsearch, getSearchDb } = require("./search-functions");
+const { getsearch, getSearchDb, limit } = require("./search-functions");
 
 router.get("/", async (req, res) => {
     const { query, index, filter } = req.query;
@@ -9,7 +9,13 @@ router.get("/", async (req, res) => {
             const result = await getsearch(query,index,filter);
             res.status(200).json(result);
         } else {
-            const result = await getsearch("");
+            const result = {
+                data:[],
+                total:0,
+                prev:undefined,
+                next:undefined,
+                limit: limit
+            }
             res.status(200).json(result);
         }
     } catch (error) {

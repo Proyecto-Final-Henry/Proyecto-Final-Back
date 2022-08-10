@@ -146,4 +146,4 @@ const getSearchDb = async (id, type, next) => {
   }
 };
 
-module.exports = { getsearch, getSearchDb };
+module.exports = { getsearch, getSearchDb, limit };
