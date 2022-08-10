@@ -3,6 +3,44 @@ const { Review, Artist, Album, Song } = require("../../db");
 
 const limit = 10; // aqui se fija el limite de items a traer de la api
 
+async function getArtistSongs(query,limit) {
+  try {
+    const response = await axios.get(`https://api.deezer.com/search/track?q=${query}&limit=${limit}`)
+                      .then(response => {
+                        let prev = undefined;
+                        let next = undefined;
+                        if (response.data.prev) {
+                          prev = true;
+                        }
+                        if (response.data.next) {
+                          next = true;
+                        }
+                        const pagination = {
+                          total: response.data.total,
+                          prev: prev,
+                          next: next,
+                          limit: limit,
+                        };
+                        return {
+                          data: response.data.data.map(item => {
+                              return{
+                                  id : item.id,
+                                  title: item.title,
+                                  duration : item.duration,
+                                  preview : item.preview,
+                                  artist:{idArtist:item.artist.id, artistName:item.artist.name},
+                                  album : {idAlbum: item.album.id, titleAlbum : item.album.title, imageAlbum : item.album.cover_big}
+                              };
+                          }),
+                          ...pagination
+                        };
+                    });
+    return response;
+  } catch (err) {
+    throw new Error("couldn't find what you needed");
+  };
+};
+
 async function getsearch(query, index, filter) {
   let ruta = "https://api.deezer.com/search";
   const responseAlbumMap = (response) => {
@@ -146,4 +184,4 @@ const getSearchDb = async (id, type, next) => {
   }
 };
 
-module.exports = { getsearch, getSearchDb, limit };
+module.exports = { getsearch, getSearchDb,getArtistSongs, limit };
