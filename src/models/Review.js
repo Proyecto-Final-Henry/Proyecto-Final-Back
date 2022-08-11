@@ -12,16 +12,20 @@ module.exports = (sequelize) => {
       allowNull: false,
     },
     score: {
-        type: DataTypes.CHAR(4),
-        allowNull: false,
-        validate: {
-          min: 0,
-          max: 5,
-        }
-      },
+      type: DataTypes.CHAR(4),
+      allowNull: false,
+      validate: {
+        min: 0,
+        max: 5,
+      }
+    },
     description:{
-        type: DataTypes.TEXT,
-        allowNull: true
-      },
+      type: DataTypes.TEXT,
+      allowNull: true
+    },
+    show: {
+      type: DataTypes.BOOLEAN,
+      defaultValue: true
+    } 
   }, {timestamps: false});
 };
