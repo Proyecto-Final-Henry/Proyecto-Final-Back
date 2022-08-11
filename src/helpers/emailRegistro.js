@@ -36,7 +36,7 @@ const emailRegistro =  async (data) => {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const msg = {
     to: email,
-    from: 'mauricio.corzo47@gmail.com',
+    from: 'music_app@tmails.net',
     subject: 'Comprueba tu cuenta en MUSIC AP',
     text: 'Comprueba tu cuenta en MUSIC APP',
     html: `<p>Hola ${name}, comprueba tu cuenta en MUSIC APP.</p>
