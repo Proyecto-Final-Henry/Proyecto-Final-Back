@@ -13,7 +13,7 @@ const emailRegistro =  async (data) => {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         }
-    })
+    });
 
     //Envio de Email
     // const {email,name,token} = data
@@ -31,7 +31,6 @@ const emailRegistro =  async (data) => {
     // })
     // console.log("Mensaje enviado: %s", info.messageId)
 
-
     //¡¡¡¡¡¡¡¡¡¡¡ENVIO DE EMAIL REALES!!!!!!!!!!!!!!! NO BORRARR!!!!!!!
     const {email,name,token} = data
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
@@ -48,9 +47,8 @@ const emailRegistro =  async (data) => {
          `
 };
     await sgMail.send(msg);   
-    console.log("MENSAJE ENVIADO CORRECTAMENTE")
-
-}
+    console.log("MENSAJE ENVIADO CORRECTAMENTE");
+};
 
 const emailContact = async (data) => {
     // Configuracion
@@ -62,7 +60,7 @@ const emailContact = async (data) => {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         }
-    })
+    });
     
     //Envio de Email
     const emailContact = 'cjfernandez29@gmail.com'; // Email unificado nuevo
@@ -77,8 +75,8 @@ const emailContact = async (data) => {
             <div><b>Email:</b> ${email}</div>
             <div><b>Mensaje:</b> ${message}</div>
         `
-    })
-}
+    });
+}; 
 
 module.exports = { emailRegistro, emailContact }
 
