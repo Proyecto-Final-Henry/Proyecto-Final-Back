@@ -18,11 +18,11 @@ const emailRegistro =  async (data) => {
     //Envio de Email
     const {email,name,token} = data
     const info = await transport.sendMail({
-        from: "MUSIC APP",
+        from: "ReMusic",
         to: email,
-        subject: "Comprueba tu cuenta en MUSIC APP",
-        text: "Comprueba tu cuenta en MUSIC APP",
-        html: `<p>Hola ${name}, comprueba tu cuenta en MUSIC APP.</p>
+        subject: "Comprueba tu cuenta en ReMusic",
+        text: "Comprueba tu cuenta en ReMusic",
+        html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
         <p> Tu cuenta ya esta lista, solo debes comprobarla en el siguiente enlace:
         <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
 
@@ -32,18 +32,17 @@ const emailRegistro =  async (data) => {
     console.log("Mensaje enviado: %s", info.messageId)
 
 
-    //                                                   ¡¡¡¡¡¡¡¡¡¡¡ENVIO DE EMAIL REALES!!!!!!!!!!!!!!! NO BORRARR!!!!!!!
+//¡¡¡¡¡¡¡¡¡¡¡ENVIO DE EMAIL REALES!!!!!!!!!!!!!!! NO BORRARR!!!!!!!
 //     const {email,name,token} = data
 //     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 //     const msg = {
 //     to: email,
 //     from: 'mauricio.corzo47@gmail.com',
-//     subject: 'Comprueba tu cuenta en MUSIC AP',
-//     text: 'Comprueba tu cuenta en MUSIC APP',
-//     html: `<p>Hola ${name}, comprueba tu cuenta en MUSIC APP.</p>
+//     subject: 'Comprueba tu cuenta en ReMusic',
+//     text: 'Comprueba tu cuenta en ReMusic',
+//     html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
 //             <p> Tu cuenta ya esta lista, solo debes comprobarla en el siguiente enlace:
 //             <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
-
 //             <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
 //          `
 // };
@@ -62,7 +61,7 @@ const emailContact = async (data) => {
             user: process.env.EMAIL_USER,
             pass: process.env.EMAIL_PASS
         }
-    })
+    });
     
     //Envio de Email
     const emailContact = 'cjfernandez29@gmail.com'; // Email unificado nuevo
