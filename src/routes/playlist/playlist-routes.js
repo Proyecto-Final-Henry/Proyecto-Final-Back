@@ -1,17 +1,19 @@
 const { Router } = require("express");
 const router = Router();
-const { createPlaylist, getAllPlaylist, addSongs, removeSongs, getPlaylist, editPlaylist } = require("./playlist-functions")
+const { createPlaylist, getAllPlaylist, addSongs, removeSongs, getUserPlaylist, editPlaylist, deletePlaylist } = require("./playlist-functions")
 
-router.post("/create", createPlaylist )
+router.post("/create", createPlaylist );
 
-router.get("/", getAllPlaylist)
+router.get("/", getAllPlaylist);
 
-router.put("/addSongs/:playlistId", addSongs)
+router.put("/addSongs/:playlistId", addSongs);
 
-router.put("/removeSongs/:playlistId", removeSongs)
+router.put("/removeSongs/:playlistId", removeSongs);
 
-router.get("/:id", getPlaylist)
+router.get("/:id", getUserPlaylist);
 
-router.put("/edit/:id", editPlaylist)
+router.put("/edit/:id", editPlaylist);
+
+router.put("/delete/:id", deletePlaylist);
 
 module.exports = router;
