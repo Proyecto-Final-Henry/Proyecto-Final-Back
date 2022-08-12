@@ -152,12 +152,12 @@ const nuevaPassword = async (req, res) => {
 };
 
 mercadopago.configure({
-    // access_token: "APP_USR-2455911465194012-080513-14612c15e2e877be43dd299f129d5eb3-202026161"
-    access_token: "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161"
-    // NUMERO DE TARJETA : 4509 9535 6623 3704
-    // CODIGO DE SEGURIDAD : 123
-    // VENCIMIENTO : 11/25
-
+  // access_token: "APP_USR-2455911465194012-080513-14612c15e2e877be43dd299f129d5eb3-202026161"
+  access_token:
+    "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161",
+  // NUMERO DE TARJETA : 4509 9535 6623 3704
+  // CODIGO DE SEGURIDAD : 123
+  // VENCIMIENTO : 11/25
 });
 
 const crearPagoMELI = async (req, res) => {
@@ -193,23 +193,23 @@ const crearPagoMELI = async (req, res) => {
   }
 };
 
-const baseApremium = async (req,res) => {
-    const {id} = req.params;
-	const usuario = await User.findOne({ where: { id: id}});
-	console.log(usuario.name);
-	console.log(req.query.status);
-    if(req.query.status === "approved"){
-        try {
-            usuario.role = "Premium";
-            await usuario.save();
-            res.redirect(`/pay/success`);
-        } catch (error) {
-        console.log(error);
-        res.redirect(`/pay/error`);
+const baseApremium = async (req, res) => {
+  const { id } = req.params;
+  const usuario = await User.findOne({ where: { id: id } });
+  console.log(usuario.name);
+  console.log(req.query.status);
+  if (req.query.status === "approved") {
+    try {
+      usuario.role = "Premium";
+      await usuario.save();
+      res.redirect(`/pay/success`);
+    } catch (error) {
+      console.log(error);
+      res.redirect(`/pay/error`);
     }
-} else {
+  } else {
     res.redirect(`http://localhost:3000/feed`);
-    };
+  }
 };
 
 const googleLogin = async (req, res) => {
@@ -233,7 +233,7 @@ const googleLogin = async (req, res) => {
   } else {
     const error = new Error("Ups algo salio mal");
     return res.status(400).json({ msg: error.message });
-  };
+  }
 };
 
 const sendEmailContact = async (req, res) => {
@@ -257,6 +257,10 @@ const setProfilePicture = async (req, res, next) => {
   try {
     const uploadConfirm = await cloudinary.uploader.upload(base64Img, {
       folder: "profile_pics",
+      transformation: {
+        aspect_ratio: "1:1",
+        crop: "crop",
+      },
     });
     let user = await User.findByPk(userId);
     user.set({
@@ -266,7 +270,7 @@ const setProfilePicture = async (req, res, next) => {
     res.send(user);
   } catch (error) {
     next(error);
-  };
+  }
 };
 
 module.exports = {
