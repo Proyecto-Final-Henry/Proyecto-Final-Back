@@ -19,6 +19,7 @@ module.exports = (sequelize) => {
       },
       release_date: {
         type: DataTypes.STRING,
+        defaultValue: DataTypes.DATEONLY.NOW,
       },
       apiId: {
         type: DataTypes.INTEGER,
