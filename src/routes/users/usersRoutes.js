@@ -1,13 +1,26 @@
-const express = require("express")
-const { registrar, confirmar, autenticar, perfil, sendEmailContact, olvidePassword, comprobarToken, nuevaPassword, crearPagoMELI, baseApremium, googleLogin } = require("./FuncionesUsers.js");
+const express = require("express");
+const {
+  registrar,
+  confirmar,
+  autenticar,
+  perfil,
+  sendEmailContact,
+  olvidePassword,
+  comprobarToken,
+  nuevaPassword,
+  crearPagoMELI,
+  baseApremium,
+  googleLogin,
+  setProfilePicture,
+} = require("./FuncionesUsers.js");
 const { checkAutenticacion } = require("../../middleware/authMiddleware");
-const usersRoutes = express.Router()
+const usersRoutes = express.Router();
 
-usersRoutes.post("/create_preference" , checkAutenticacion, crearPagoMELI ); // tarjetas adentro de la funcion crearPagoMELI
+usersRoutes.post("/create_preference", checkAutenticacion, crearPagoMELI); // tarjetas adentro de la funcion crearPagoMELI
 
-usersRoutes.get(`/feedback/:id`, baseApremium )
+usersRoutes.get(`/feedback/:id`, baseApremium);
 
-usersRoutes.post("/googleLogin" , googleLogin)
+usersRoutes.post("/googleLogin", googleLogin);
 
 usersRoutes.post("/register", registrar);
 
@@ -25,5 +38,6 @@ usersRoutes.get("/perfil", checkAutenticacion, perfil);
 
 usersRoutes.post("/sendEmailContact", sendEmailContact);
 
-module.exports =  usersRoutes;
+usersRoutes.post("/profileImg", setProfilePicture);
 
+module.exports = usersRoutes;
