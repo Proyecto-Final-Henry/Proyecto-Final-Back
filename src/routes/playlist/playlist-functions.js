@@ -43,6 +43,9 @@ const getAllPlaylist = async (req, res, next) => {
     try {
 
         const playlistsDb = await Playlist.findAll({
+            where: { 
+                show: true
+            },
             include: [{
                 model: Song
         }]
@@ -93,12 +96,14 @@ const removeSongs = async (req, res, next) => {
     }
 }
 
-const getPlaylist = async (req, res, next) => {
+const getUserPlaylist = async (req, res, next) => {
     try {
 
         const {id} = req.params;
 
-        const playlistDb = await Playlist.findByPk(id);
+        const playlistDb = await Playlist.findAll({
+            where: {userId: id, show: true}
+        });
 
         if (playlistDb) {
 
@@ -133,7 +138,19 @@ const editPlaylist = async (req, res, next) => {
         res.send("Playlist editada correctamente")
 
     } catch (error) {
-        next(error)
+        next(error);
+    }
+};
+
+const deletePlaylist = async (req, res, next) => {
+    try {
+        const {id} = req.params;
+        const playlistDb = await Playlist.findByPk(id);
+        playlistDb.show = false;
+        await playlistDb.save();
+        res.send("Se ha eliminado la playlist correctamente");
+    } catch (error) {
+        next(error);
     }
 }
 
@@ -142,6 +159,7 @@ module.exports = {
     getAllPlaylist,
     addSongs,
     removeSongs,
-    getPlaylist,
-    editPlaylist
+    getUserPlaylist,
+    editPlaylist,
+    deletePlaylist
 };
