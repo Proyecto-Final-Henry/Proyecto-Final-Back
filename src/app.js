@@ -12,6 +12,8 @@ const albumsRoutes  = require("./routes/albums/albums-routes");
 const searchRoutes  = require('./routes/search/search-routes');
 const userRoutes = require("./routes/user/user-routes")
 const playlistRoutes = require("./routes/playlist/playlist-routes")
+const { Server } = require("socket.io")
+const http = require("http")
 
 require("./db.js");
 
@@ -45,6 +47,23 @@ server.use('/api/back-end/artists', artistsRoutes);
 server.use('/api/back-end/albums', albumsRoutes);
 server.use('/api/back-end/search', searchRoutes);
 
+const serverSocketIo = http.createServer(server)
+const io = new Server(serverSocketIo , {
+  cors: {
+    origin: "*"
+  }
+})
+
+io.on("connection", (socket) => {
+  console.log(socket.id)
+  console.log("user conectado")
+  io.emit('firstEvent','Hello this is a test')
+  socket.on("mensaje", (mensaje) => {
+    console.log(mensaje)
+  })
+
+})
+
 // Error catching endware.
 server.use((err, req, res, next) => {
   // eslint-disable-line no-unused-vars
@@ -54,4 +73,4 @@ server.use((err, req, res, next) => {
   res.status(status).send({ message });
 });
 
-module.exports = server;
+module.exports = {server , serverSocketIo};
