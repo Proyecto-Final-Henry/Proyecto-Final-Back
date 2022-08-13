@@ -1,3 +1,4 @@
+node_modules
 .env
 node_modules/.package-lock.json
 node_modules/.bin/_mocha
@@ -9708,3 +9709,4 @@ node_modules/verror/node_modules/core-util-is/package.json
 node_modules/verror/node_modules/core-util-is/README.md
 node_modules/verror/node_modules/core-util-is/test.js
 node_modules/verror/node_modules/core-util-is/lib/util.js
+.gitignore
