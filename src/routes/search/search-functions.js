@@ -1,7 +1,78 @@
 const axios = require("axios");
 const { Review, Artist, Album, Song } = require("../../db");
 
-const limit = 10; // aqui se fija el limite de items a traer de la api
+const limitFixed=10; // aqui se fija el limite de items a traer de la api
+let limit = limitFixed; 
+
+function filterSearch(response, filters){
+  let far,fal,fex,explicit;
+  let isFilter=false;
+  let result={};
+  filters.artist && filters.artist!== 'Seleccione un artista'? far=true : far=false;
+  filters.album && filters.album!== 'Seleccione un album'? fal=true : fal=false;
+  filters.explicit && filters.explicit!== 'Seleccione una opción'? fex=true : fex=false;  
+  filters.explicit==="true"? explicit= true: explicit= false;
+  responseFilter=response.data
+  let cAr = far && !fal && !fex;
+  let cAl = !far && fal && !fex;
+  let cEx = !far && !fal && fex;
+  let cArAl = far && fal && !fex;
+  let cArAlEx = far && fal && fex;
+  let cArEx = far && !fal && fex;
+  let cAlEx = !far && fal && fex;
+
+  switch (true) {
+    case cAr:
+      responseFilter=responseFilter.filter(e=>e.artist===filters.artist);
+      isFilter=true
+      break
+    case cAl:
+      responseFilter=responseFilter.filter(e=>e.album===filters.album)
+      isFilter=true
+      break
+    case cEx:   
+      responseFilter=responseFilter.filter(e=>e.explicit===explicit)
+      isFilter=true
+      break
+    case cArAl:
+      responseFilter=responseFilter.filter(e=>e.artist===filters.artist && e.album===filters.album)
+      isFilter=true
+      break
+    case cArAlEx:
+      responseFilter=responseFilter.filter(e=>e.artist===filters.artist && e.album===filters.album && e.explicit===explicit)
+      isFilter=true
+      break
+    case cArEx:
+      responseFilter=responseFilter.filter(e=>e.artist===filters.artist && e.explicit===explicit)
+      isFilter=true
+      break
+    case cAlEx:
+      responseFilter=responseFilter.filter(e=>e.album===filters.album && e.explicit===explicit)
+      isFilter=true
+      break
+    default:
+  }
+  if(isFilter){
+    result = {
+      data:responseFilter ,
+      total:responseFilter.length + " de " + response.total,
+      array: response.data.length,
+      prev:undefined,
+      next:undefined,
+      limit: response.limit
+    }
+  }else{
+    result = {
+      data:responseFilter,
+      total:response.total,
+      prev:response.prev,
+      next:response.next,
+      limit: response.limit
+    }
+  }
+  
+  return result
+}
 
 async function getArtistSongs(query,limit) {
   try {
@@ -41,7 +112,7 @@ async function getArtistSongs(query,limit) {
   };
 };
 
-async function getsearch(query, index, filter) {
+async function getsearch(query, index, filter,filters) {
   let ruta = "https://api.deezer.com/search";
   const responseAlbumMap = (response) => {
     return response.data.data.map((item) => {
@@ -53,6 +124,7 @@ async function getsearch(query, index, filter) {
         artist: item.artist.name,
         artistId: item.artist.id,
         img: item.cover_big,
+        explicit: item.explicit_lyrics
       };
     });
   };
@@ -68,6 +140,7 @@ async function getsearch(query, index, filter) {
         img: item.album.cover_big,
         album: item.album.title,
         albumId: item.album.id,
+        explicit: item.explicit_lyrics
       };
     });
   };
@@ -91,6 +164,11 @@ async function getsearch(query, index, filter) {
     } else if (filter === "track") {
       ruta = "https://api.deezer.com/search/track";
     }
+  }
+  if((filters.artist && filters.artist!== 'Seleccione un artista') || (filters.album && filters.album!== 'Seleccione un album') || (filters.explicit && filters.explicit!== 'Seleccione una opción')){
+    limit=300
+  }else{
+    limit=limitFixed
   }
 
   try {
@@ -184,4 +262,4 @@ const getSearchDb = async (id, type, next) => {
   }
 };
 
-module.exports = { getsearch, getSearchDb,getArtistSongs, limit };
+module.exports = { getsearch, getSearchDb,getArtistSongs,filterSearch, limit };

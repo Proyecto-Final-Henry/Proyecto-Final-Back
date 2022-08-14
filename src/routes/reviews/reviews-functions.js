@@ -89,7 +89,8 @@ const getReview = async (req, res, next) => {
           show: true
         },
         include: {
-          model: User,
+          model: User, 
+          include: ["followers", "following"]
         },
       });
 
