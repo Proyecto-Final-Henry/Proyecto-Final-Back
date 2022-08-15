@@ -10,21 +10,18 @@ const { cloudinary } = require("../../helpers/cloudinary");
 
 const registrar = async (req, res) => {
   const { email, name } = req.body;
-
   const existeUsuario = await User.findOne({ where: { email: email } });
 
   if (existeUsuario) {
     const error = new Error("Usuario ya registrado");
     return res.status(400).json({ msg: error.message });
-  }
-
+  };
   try {
     const usuario = await User.create(req.body);
     usuario.password = await bcrypt.hash(usuario.password, 10);
     await usuario.save();
     //Enviar Email
     emailRegistro({ email, name, token: usuario.token });
-
     res.json(usuario);
   } catch (error) {
     console.log(error);
@@ -33,13 +30,11 @@ const registrar = async (req, res) => {
 
 const confirmar = async (req, res) => {
   const { token } = req.params;
-
-  const usuarioConfirmar = await User.findOne({ where: { token: token } });
-
+  const usuarioConfirmar = await User.findOne({ where: {token: token}});
   if (!usuarioConfirmar) {
     const error = new Error("Token no valido");
     return res.status(404).json({ msg: error.message });
-  }
+  };
 
   try {
     usuarioConfirmar.token = null;
@@ -48,7 +43,7 @@ const confirmar = async (req, res) => {
     res.json({ msg: "Usuario confirmado correctamente" });
   } catch (error) {
     console.log(error);
-  }
+  };
 };
 
 const autenticar = async (req, res) => {
@@ -59,12 +54,12 @@ const autenticar = async (req, res) => {
   if (!usuario) {
     const error = new Error("Usuario inexistente");
     return res.status(404).json({ msg: error.message });
-  }
+  };
 
   if (!usuario.confirmado) {
     const error = new Error("Tu cuenta aun no a sido confirmada");
     return res.status(403).json({ msg: error.message });
-  }
+  };
 
   if (await bcrypt.compare(password, usuario.password)) {
     usuario.token = generarJWT(usuario.email);
@@ -73,12 +68,11 @@ const autenticar = async (req, res) => {
   } else {
     const error = new Error("El password es incorrecto");
     return res.status(404).json({ msg: error.message });
-  }
+  };
 };
 
 const perfil = async (req, res) => {
   const usuario = req.usuario;
-
   res.json({
     id: usuario.id,
     name: usuario.name,
@@ -172,9 +166,9 @@ const crearPagoMELI = async (req, res) => {
       },
     ],
     back_urls: {
-      success: `http://localhost:3001/api/back-end/users/feedback/${id}`,
-      failure: `http://localhost:3001/api/back-end/users/feedback/${id}`,
-      pending: `http://localhost:3001/api/back-end/users/feedback/${id}`,
+      success: `/api/back-end/users/feedback/${id}`,
+      failure: `/api/back-end/users/feedback/${id}`,
+      pending: `/api/back-end/users/feedback/${id}`,
     },
     auto_return: "approved",
     payment_methods: {
@@ -208,32 +202,29 @@ const baseApremium = async (req, res) => {
       res.redirect(`/pay/error`);
     }
   } else {
-    res.redirect(`http://localhost:3000/feed`);
+    res.redirect(`/feed`);
   }
 };
 
 const googleLogin = async (req, res) => {
-  const { email, emailVerified } = req.body;
+  const { email } = req.body;
 
-  if (emailVerified) {
-    const usuario = await User.findOne({ where: { email: email } });
+   const usuario = await User.findOne({ where: { email : email } } );
 
-    if (usuario) {
-      return res.json(usuario);
-    }
-    try {
-      const nuevoUsuario = await User.create(req.body);
-      nuevoUsuario.token = generarJWT(nuevoUsuario.email);
-      nuevoUsuario.confirmado = true;
-      await nuevoUsuario.save();
-      res.json(nuevoUsuario);
-    } catch (error) {
-      console.log(error);
-    }
-  } else {
-    const error = new Error("Ups algo salio mal");
-    return res.status(400).json({ msg: error.message });
-  }
+   if(usuario){
+      return res.json(usuario)
+   } ;
+   try {
+       const nuevoUsuario = await User.create(req.body)
+       nuevoUsuario.token = generarJWT(nuevoUsuario.email)
+       nuevoUsuario.password = generarId()
+       nuevoUsuario.confirmado = true
+       await nuevoUsuario.save()
+       res.json(nuevoUsuario)
+   } catch (error) {
+       const e = new Error ("Ups algo salio mal")
+       return res.status(400).json({msg: e.message})
+   };
 };
 
 const sendEmailContact = async (req, res) => {

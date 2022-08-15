@@ -40,4 +40,8 @@ usersRoutes.post("/sendEmailContact", sendEmailContact);
 
 usersRoutes.post("/profileImg", setProfilePicture);
 
+usersRoutes.get ("*", (req, res) => {
+  res.send("Ruta invalida, revisa el nombre de la ruta");
+});
+
 module.exports = usersRoutes;
