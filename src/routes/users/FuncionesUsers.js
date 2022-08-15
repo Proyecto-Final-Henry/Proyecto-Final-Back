@@ -184,7 +184,7 @@ const crearPagoMELI = async (req, res) => {
     res.json({ id: response.body });
   } catch (error) {
     console.log(error);
-  }
+  };
 };
 
 const baseApremium = async (req, res) => {
@@ -198,62 +198,6 @@ const baseApremium = async (req, res) => {
       await usuario.save();
       res.redirect(`/pay/success`);
     } catch (error) {
-<<<<<<< HEAD
-        console.log(error);
-    };
-};
-
-const crearPagoMELI = async (req , res) => {
-    const { usuario } = req;
-	const id = usuario.id;
-	let preference = {
-		items: [
-			{
-				title: req.body.description,
-				unit_price: Number(req.body.price),
-				quantity: Number(req.body.quantity),
-			}
-		],
-		back_urls: {
-			success: `/api/back-end/users/feedback/${id}`,
-			failure: `/api/back-end/users/feedback/${id}`,
-			pending: `/api/back-end/users/feedback/${id}`
-		},
-		 auto_return: "approved",
-         payment_methods: {
-            excluded_payment_types: [
-                {
-                    id: "ticket"
-                }
-            ],
-            }
-	};
-     try {    
-	const response = await mercadopago.preferences.create(preference);
-    res.json( {id : response.body});
-     } catch (error) {
-        console.log(error);
-     };
-};
-
-const baseApremium = async (req,res) => {
-    const {id } = req.params;
-	const usuario = await User.findOne({ where: { id: id}});
-	console.log(usuario.name);
-	console.log(req.query.status);
-    if(req.query.status === "approved"){
-        try {
-            usuario.role = "Premium";
-            await usuario.save();
-            res.redirect(`/pay/success`);
-        } catch (error) {
-        console.log(error);
-        res.redirect(`/pay/error`);
-    }
-} else {
-    res.redirect(`/feed`)
-}
-=======
       console.log(error);
       res.redirect(`/pay/error`);
     }
@@ -261,7 +205,6 @@ const baseApremium = async (req,res) => {
     res.redirect(`/feed`);
   }
 };
->>>>>>> 6a4d879dd39e6c8b703500b8dc029057b7ef0799
 
 const googleLogin = async (req, res) => {
   const { email } = req.body;
