@@ -12,11 +12,12 @@ const emailOlvidePassword = async (datos) => {
 
     //Enviar Email
     const { email, name, token } = datos
-    const info = await transport.sendMail({
-        from: "MUSIC APP",
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+        from: 'music_app@tmails.net',
         to: email,
-        subject: "Restablece tu Password en MUSIC APP",
-        text: "Restablece tu Password en MUSIC APP",
+        subject: "Restablece tu Password en ReMusic",
+        text: "Restablece tu Password en ReMusic",
         html: `<p>Hola ${name}, has solicitado reestablecer tu password.</p>
 
         <p>Sigue el siguiente enlace para reestablecer tu password:
@@ -25,9 +26,9 @@ const emailOlvidePassword = async (datos) => {
         <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
         
         `
-    })
-    
-    console.log("Mensaje enviado: %s" , info.messageId)
-}
+    }
+    await sgMail.send(msg);   
+    console.log("MENSAJE ENVIADO CORRECTAMENTE");
+    };
 
 module.exports = { emailOlvidePassword }

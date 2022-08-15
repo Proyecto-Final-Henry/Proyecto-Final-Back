@@ -57,7 +57,7 @@ const autenticar = async (req, res) => {
   };
 
   if (!usuario.confirmado) {
-    const error = new Error("Tu cuenta aun no a sido confirmada");
+    const error = new Error("Tu cuenta aun no ha sido confirmada");
     return res.status(403).json({ msg: error.message });
   };
 
@@ -66,7 +66,7 @@ const autenticar = async (req, res) => {
     await usuario.save();
     res.json(usuario);
   } else {
-    const error = new Error("El password es incorrecto");
+    const error = new Error("La contraseña es incorrecto");
     return res.status(404).json({ msg: error.message });
   };
 };
@@ -133,13 +133,13 @@ const nuevaPassword = async (req, res) => {
   if (!usuario) {
     const error = new Error("Hubo un error");
     return res.status(400).json({ msg: error.message });
-  }
+  };
 
   try {
     usuario.token = null;
     usuario.password = await bcrypt.hash(password, 10);
     await usuario.save();
-    res.json({ msg: "Password modificada correctamente" });
+    res.json({ msg: "Contraseña modificada correctamente" });
   } catch (error) {
     console.log(error);
   }
@@ -182,6 +182,8 @@ const crearPagoMELI = async (req, res) => {
   };
   try {
     const response = await mercadopago.preferences.create(preference);
+    console.log(response)
+    console.log({ id: response.body })
     res.json({ id: response.body });
   } catch (error) {
     console.log(error);
@@ -214,13 +216,14 @@ const googleLogin = async (req, res) => {
 
    if(usuario){
       return res.json(usuario)
-   } ;
+   };
    try {
        const nuevoUsuario = await User.create(req.body)
        nuevoUsuario.token = generarJWT(nuevoUsuario.email)
        nuevoUsuario.password = generarId()
        nuevoUsuario.confirmado = true
        await nuevoUsuario.save()
+       console.log(nuevoUsuario)
        res.json(nuevoUsuario)
    } catch (error) {
        const e = new Error ("Ups algo salio mal")
