@@ -85,8 +85,12 @@ const getReview = async (req, res, next) => {
       res.send(reviewDb);
     } else {
       const allReview = await Review.findAll({
+        where: {
+          show: true
+        },
         include: {
-          model: User,
+          model: User, 
+          include: ["followers", "following"]
         },
       });
 
@@ -104,6 +108,7 @@ const getUserReview = async (req, res, next) => {
     const userReviews = await Review.findAll({
       where: {
         userId: id,
+        show: true
       },
     });
 
@@ -127,7 +132,7 @@ const getResourceReviews = async (req, res, next) => {
           where: { apiId: id },
           include: [
             {
-              model: Review,
+              model: Review, where: { show: true },
               include: [{ model: User }],
             },
           ],
@@ -159,7 +164,7 @@ const getResourceReviews = async (req, res, next) => {
           where: { apiId: id },
           include: [
             {
-              model: Review,
+              model: Review, where: { show: true },
               include: [{ model: User }],
             },
           ],
@@ -191,7 +196,7 @@ const getResourceReviews = async (req, res, next) => {
           where: { apiId: id },
           include: [
             {
-              model: Review,
+              model: Review, where: { show: true },
               include: [{ model: User }],
             },
           ],
@@ -226,10 +231,23 @@ const getResourceReviews = async (req, res, next) => {
   }
 };
 
+const deleteReview = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const reviewDb = await Review.findByPk(id);
+    reviewDb.show = false;
+    await reviewDb.save();
+    res.send("Se ha eliminado la review correctamente")
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   crear,
   modificar,
   getReview,
   getUserReview,
   getResourceReviews,
+  deleteReview
 };
