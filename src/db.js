@@ -70,13 +70,13 @@ User.belongsToMany(Song, { through: "Liked_Songs", timestamps: false });
 User.belongsToMany(Song, { through: "Listen_Later", timestamps: false });
 User.hasMany(Review); // written reviews
 
-User.hasMany(Playlist)
+User.hasMany(Playlist);
 
-User.belongsToMany(User, { as: "followers" ,through: "User_Followers", foreignKey: "follower_id", otherKey: "following_id",timestamps: false })
-User.belongsToMany(User, { as: "following" ,through: "User_Followers", foreignKey: "following_id", otherKey: "follower_id" ,timestamps: false })
+User.belongsToMany(User, { as: "followers" ,through: "User_Followers", foreignKey: "follower_id", otherKey: "following_id",timestamps: false });
+User.belongsToMany(User, { as: "following" ,through: "User_Followers", foreignKey: "following_id", otherKey: "follower_id" ,timestamps: false });
 
 Album.belongsTo(Artist);
-Album.belongsToMany(Genre, { through: "Album_Genre", timestamps: false });;
+Album.belongsToMany(Genre, { through: "Album_Genre", timestamps: false });
 Album.hasMany(Song);
 Album.hasMany(Review);
 
