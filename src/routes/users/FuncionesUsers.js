@@ -67,7 +67,7 @@ const autenticar = async (req, res) => {
     await usuario.save();
     res.json(usuario);
   } else {
-    const error = new Error("La contraseña es incorrecta");
+    const error = new Error("La contraseña es incorrecto");
     return res.status(404).json({ msg: error.message });
   };
 };
@@ -199,14 +199,23 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`/pay/success`);
+      res.writeHead(302, {
+        Location: FRONTEND_URL + `/pay/success`
+    });
+      res.end();
     } catch (error) {
       console.log(error);
-      res.redirect(`/pay/error`);
+      res.writeHead(302, {
+        Location: FRONTEND_URL + `/pay/error`
+    });
+      res.end();
     }
   } else {
-    res.redirect(FRONTEND_URL + `/feed`);
-  }
+    res.writeHead(302, {
+      Location: FRONTEND_URL + `/feed`
+    });
+    res.end();
+  };
 };
 
 const googleLogin = async (req, res) => {
