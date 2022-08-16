@@ -1,5 +1,5 @@
 const jwt = require ("jsonwebtoken");
-const {User} = require("../db.js")
+const {User, Review} = require("../db.js")
 
 
 
@@ -10,7 +10,9 @@ const checkAutenticacion = async (req,res,next) => {
             token = req.headers.authorization.split(" ")[1]
             const decodificarToken = jwt.verify(token, process.env.JWT_SECRET)
             
-            req.usuario = await User.findOne({where:{email: decodificarToken.email}})
+            req.usuario = await User.findOne({where:{email: decodificarToken.email}},{include: [{
+                model: Review
+            }, "followers", "following"]})
             
             
             return next()
