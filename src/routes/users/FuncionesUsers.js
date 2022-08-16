@@ -7,6 +7,7 @@ const { generarJWT } = require("../../helpers/generarJWT");
 const { generarId } = require("../../helpers/generarId.js");
 const mercadopago = require("mercadopago");
 const { cloudinary } = require("../../helpers/cloudinary");
+const { FRONTEND_URL, BACKEND_URL } = process.env
 
 const registrar = async (req, res) => {
   const { email, name } = req.body;
@@ -147,9 +148,10 @@ const nuevaPassword = async (req, res) => {
 
 mercadopago.configure({
   // access_token: "APP_USR-2455911465194012-080513-14612c15e2e877be43dd299f129d5eb3-202026161"
+  // access_token alt: "APP_USR-3599770472888555-081520-36e9e106b0bc297effcc9d08fc27403e-202026161"
   // test access_token: TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161
   access_token:
-    "APP_USR-2455911465194012-080513-14612c15e2e877be43dd299f129d5eb3-202026161",
+    "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161",
   // NUMERO DE TARJETA : 4509 9535 6623 3704
   // CODIGO DE SEGURIDAD : 123
   // VENCIMIENTO : 11/25
@@ -167,9 +169,9 @@ const crearPagoMELI = async (req, res) => {
       },
     ],
     back_urls: {
-      success: `/api/back-end/users/feedback/${id}`,
-      failure: `/api/back-end/users/feedback/${id}`,
-      pending: `/api/back-end/users/feedback/${id}`,
+      success: BACKEND_URL + `/api/back-end/users/feedback/${id}`,
+      failure: BACKEND_URL + `/api/back-end/users/feedback/${id}`,
+      pending: BACKEND_URL + `/api/back-end/users/feedback/${id}`,
     },
     auto_return: "approved",
     payment_methods: {
@@ -182,12 +184,10 @@ const crearPagoMELI = async (req, res) => {
   };
   try {
     const response = await mercadopago.preferences.create(preference);
-    console.log(response)
-    console.log({ id: response.body })
     res.json({ id: response.body });
   } catch (error) {
     console.log(error);
-  };
+  }
 };
 
 const baseApremium = async (req, res) => {
@@ -199,13 +199,13 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`/pay/success`);
+      res.redirect(FRONTEND_URL + `/pay/success`);
     } catch (error) {
       console.log(error);
-      res.redirect(`/pay/error`);
+      res.redirect(FRONTEND_URL + `/pay/error`);
     }
   } else {
-    res.redirect(`/feed`);
+    res.redirect(FRONTEND_URL + `/feed`);
   }
 };
 
