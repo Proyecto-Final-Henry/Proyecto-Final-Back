@@ -169,9 +169,9 @@ const crearPagoMELI = async (req, res) => {
       },
     ],
     back_urls: {
-      success: BACKEND_URL + `/api/back-end/users/feedback/${id}`,
-      failure: BACKEND_URL + `/api/back-end/users/feedback/${id}`,
-      pending: BACKEND_URL + `/api/back-end/users/feedback/${id}`,
+      success: `http://localhost:3001/api/back-end/users/feedback/${id}`,
+      failure: `http://localhost:3001/api/back-end/users/feedback/${id}`,
+      pending: `http://localhost:3001/api/back-end/users/feedback/${id}`,
     },
     auto_return: "approved",
     payment_methods: {
@@ -199,13 +199,13 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`${FRONTEND_URL}/pay/success`);
+      res.redirect(`/pay/success`);
     } catch (error) {
       console.log(error);
-      res.redirect(`${FRONTEND_URL}/pay/error`);
+      res.redirect(`/pay/error`);
     }
   } else {
-    res.redirect(`${FRONTEND_URL}/feed`);
+    res.redirect(`/feed`);
   }
 };
 
