@@ -1,4 +1,5 @@
 const nodemailer = require("nodemailer")
+const sgMail = require('@sendgrid/mail');
 
 const emailOlvidePassword = async (datos) => {
     const transport = nodemailer.createTransport({
@@ -16,12 +17,12 @@ const emailOlvidePassword = async (datos) => {
     const msg = {
         from: 'music_app@tmails.net',
         to: email,
-        subject: "Restablece tu Password en ReMusic",
-        text: "Restablece tu Password en ReMusic",
-        html: `<p>Hola ${name}, has solicitado reestablecer tu password.</p>
+        subject: "Restablece tu Contraseña en ReMusic",
+        text: "Restablece tu Contraseña en ReMusic",
+        html: `<p>Hola ${name}, has solicitado reestablecer tu contraseña.</p>
 
-        <p>Sigue el siguiente enlace para reestablecer tu password:
-        <a href="${process.env.FRONTEND_URL}/olvide-password/${token}">Reestablecer Password</a> </p>
+        <p>Sigue el siguiente enlace para reestablecer tu Contraseña:
+        <a href="${process.env.FRONTEND_URL}/olvide-password/${token}">Reestablecer Contraseña</a> </p>
 
         <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
         
