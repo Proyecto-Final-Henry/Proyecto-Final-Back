@@ -14,23 +14,38 @@ const emailRegistro =  async (data) => {
         }
     });
 
+    const {email,name,token} = data
+    const info = await transport.sendMail({
+        from: "ReMusic",
+        to: email,
+        subject: "Comprueba tu cuenta en ReMusic",
+        text: "Comprueba tu cuenta en ReMusic",
+        html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
+        <p> Tu cuenta ya esta lista, solo debes comprobarla en el siguiente enlace:
+        <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
+        <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
+        `
+    })
+    console.log("Mensaje enviado: %s", info.messageId)
+    };
+
     //¡¡¡¡¡¡¡¡¡¡¡ENVIO DE EMAIL REALES!!!!!!!!!!!!!!! NO BORRARR!!!!!!!
-    const {email,name,token} = data 
-    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-    const msg = {
-    to: email,
-    from: 'music_app@tmails.net',
-    subject: 'Comprueba tu cuenta en ReMusic',
-    text: 'Comprueba tu cuenta en ReMusic',
-    html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
-            <p> Tu cuenta ya esta lista, solo debes comprobarla con el siguiente enlace:
-            <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
-            <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
-         `
-};
-    await sgMail.send(msg);   
-    console.log("MENSAJE ENVIADO CORRECTAMENTE");
-};
+//     const {email,name,token} = data 
+//     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+//     const msg = {
+//     to: email,
+//     from: 'music_app@tmails.net',
+//     subject: 'Comprueba tu cuenta en ReMusic',
+//     text: 'Comprueba tu cuenta en ReMusic',
+//     html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
+//             <p> Tu cuenta ya esta lista, solo debes comprobarla con el siguiente enlace:
+//             <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
+//             <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
+//          `
+// };
+//     await sgMail.send(msg);   
+//     console.log("MENSAJE ENVIADO CORRECTAMENTE");
+// };
 
 const emailContact = async (data) => {
     // Configuracion
