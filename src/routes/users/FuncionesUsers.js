@@ -84,6 +84,9 @@ const perfil = async (req, res) => {
     role: usuario.role,
     createdDate: usuario.createdDate,
     userImg: usuario.userImg,
+    reviews: usuario.reviews,
+    followers: usuario.followers,
+    following: usuario.following
   });
 };
 
