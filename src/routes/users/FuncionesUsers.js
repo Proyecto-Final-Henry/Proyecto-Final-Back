@@ -199,23 +199,14 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.writeHead(302, {
-        Location: FRONTEND_URL + `/pay/success`
-    });
-      res.end();
+      res.redirect(`${FRONTEND_URL}/pay/success`);
     } catch (error) {
       console.log(error);
-      res.writeHead(302, {
-        Location: FRONTEND_URL + `/pay/error`
-    });
-      res.end();
+      res.redirect(`${FRONTEND_URL}/pay/error`);
     }
   } else {
-    res.writeHead(302, {
-      Location: FRONTEND_URL + `/feed`
-    });
-    res.end();
-  };
+    res.redirect(`${FRONTEND_URL}/feed`);
+  }
 };
 
 const googleLogin = async (req, res) => {
