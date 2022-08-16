@@ -199,10 +199,10 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(FRONTEND_URL + `/pay/success`);
+      res.redirect(`/pay/success`);
     } catch (error) {
       console.log(error);
-      res.redirect(FRONTEND_URL + `/pay/error`);
+      res.redirect(`/pay/error`);
     }
   } else {
     res.redirect(FRONTEND_URL + `/feed`);
