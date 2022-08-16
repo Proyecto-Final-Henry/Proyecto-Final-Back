@@ -52,7 +52,7 @@ async function createAlbums(req, res, next) {
     let AlbumFind = await Album.findAll({include: Genre}); //{include: Genre}
 
     if (!AlbumFind.length) {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 200; i++) {
         const random = getRandomInt(100000, 999999);
         const response = await axios.get(`https://api.deezer.com/album/${random}`);
         if (response.data.title) {

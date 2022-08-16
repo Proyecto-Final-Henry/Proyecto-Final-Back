@@ -7,6 +7,7 @@ const { generarJWT } = require("../../helpers/generarJWT");
 const { generarId } = require("../../helpers/generarId.js");
 const mercadopago = require("mercadopago");
 const { cloudinary } = require("../../helpers/cloudinary");
+const { FRONTEND_URL, BACKEND_URL } = process.env
 
 const registrar = async (req, res) => {
   const { email, name } = req.body;
@@ -30,7 +31,9 @@ const registrar = async (req, res) => {
 
 const confirmar = async (req, res) => {
   const { token } = req.params;
+  console.log(token);
   const usuarioConfirmar = await User.findOne({ where: {token: token}});
+
   if (!usuarioConfirmar) {
     const error = new Error("Token no valido");
     return res.status(404).json({ msg: error.message });
@@ -57,7 +60,7 @@ const autenticar = async (req, res) => {
   };
 
   if (!usuario.confirmado) {
-    const error = new Error("Tu cuenta aun no a sido confirmada");
+    const error = new Error("Tu cuenta aun no ha sido confirmada");
     return res.status(403).json({ msg: error.message });
   };
 
@@ -66,7 +69,7 @@ const autenticar = async (req, res) => {
     await usuario.save();
     res.json(usuario);
   } else {
-    const error = new Error("El password es incorrecto");
+    const error = new Error("La contraseña es incorrecto");
     return res.status(404).json({ msg: error.message });
   };
 };
@@ -133,13 +136,13 @@ const nuevaPassword = async (req, res) => {
   if (!usuario) {
     const error = new Error("Hubo un error");
     return res.status(400).json({ msg: error.message });
-  }
+  };
 
   try {
     usuario.token = null;
     usuario.password = await bcrypt.hash(password, 10);
     await usuario.save();
-    res.json({ msg: "Password modificada correctamente" });
+    res.json({ msg: "Contraseña modificada correctamente" });
   } catch (error) {
     console.log(error);
   }
@@ -147,6 +150,8 @@ const nuevaPassword = async (req, res) => {
 
 mercadopago.configure({
   // access_token: "APP_USR-2455911465194012-080513-14612c15e2e877be43dd299f129d5eb3-202026161"
+  // access_token alt: "APP_USR-3599770472888555-081520-36e9e106b0bc297effcc9d08fc27403e-202026161"
+  // test access_token: TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161
   access_token:
     "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161",
   // NUMERO DE TARJETA : 4509 9535 6623 3704
@@ -166,9 +171,9 @@ const crearPagoMELI = async (req, res) => {
       },
     ],
     back_urls: {
-      success: `/api/back-end/users/feedback/${id}`,
-      failure: `/api/back-end/users/feedback/${id}`,
-      pending: `/api/back-end/users/feedback/${id}`,
+      success: `http://localhost:3001/api/back-end/users/feedback/${id}`, // https://remusic.onrender.com
+      failure: `http://localhost:3001/api/back-end/users/feedback/${id}`,
+      pending: `http://localhost:3001/api/back-end/users/feedback/${id}`,
     },
     auto_return: "approved",
     payment_methods: {
@@ -196,13 +201,13 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`/pay/success`);
+      res.redirect(`http://localhost:3001p/pay/success`); // https://proyecto-final-front-tau.vercel.app
     } catch (error) {
       console.log(error);
-      res.redirect(`/pay/error`);
+      res.redirect(`http://localhost:3001/pay/error`); // https://proyecto-final-front-tau.vercel.app
     }
   } else {
-    res.redirect(`/feed`);
+    res.redirect(`http://localhost:3001/feed`); // https://proyecto-final-front-tau.vercel.app
   }
 };
 
@@ -213,13 +218,14 @@ const googleLogin = async (req, res) => {
 
    if(usuario){
       return res.json(usuario)
-   } ;
+   };
    try {
        const nuevoUsuario = await User.create(req.body)
        nuevoUsuario.token = generarJWT(nuevoUsuario.email)
        nuevoUsuario.password = generarId()
        nuevoUsuario.confirmado = true
        await nuevoUsuario.save()
+       console.log(nuevoUsuario)
        res.json(nuevoUsuario)
    } catch (error) {
        const e = new Error ("Ups algo salio mal")
