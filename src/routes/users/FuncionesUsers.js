@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { User } = require("../../db.js");
+const { User, Review } = require("../../db.js");
 const bcrypt = require("bcrypt");
 const { emailRegistro } = require("../../helpers/emailRegistro");
 const { emailOlvidePassword } = require("../../helpers/emailOlvidePassword.js");
@@ -217,7 +217,9 @@ const baseApremium = async (req, res) => {
 const googleLogin = async (req, res) => {
   const { email } = req.body;
 
-   const usuario = await User.findOne({ where: { email : email } } );
+   const usuario = await User.findOne({ where: { email : email } },{include: [{
+    model: Review
+}, "followers", "following"]});
 
    if(usuario){
       return res.json(usuario)

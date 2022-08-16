@@ -8,10 +8,11 @@ const checkAutenticacion = async (req,res,next) => {
             token = req.headers.authorization.split(" ")[1]
             const decodificarToken = jwt.verify(token, process.env.JWT_SECRET)
             
-            req.usuario = await User.findOne({where:{email: decodificarToken.email}},{include: [{
+            req.usuario = await User.findOne({include: [{
                 model: Review
-            }, "followers", "following"]})
+            }, "followers", "following"]},{where:{email: decodificarToken.email}})
             
+            console.log(req.usuario)
             
             return next()
 
