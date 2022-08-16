@@ -9,13 +9,13 @@ const follow = async (req, res, next) => {
         if (hasFollow) {
             res.send("Ya sigues a este usuario");
         } else {
-            await userDb.addFollowing(followId)
+            await userDb.addFollowing(followId);
             res.send("Ahora sigues a este usuario");
-        }
+        };
     } catch (error) {
-        next(error)
-    }
-}
+        next(error);
+    };
+};
 
 const unFollow = async (req, res, next) => {
     try {
@@ -40,11 +40,11 @@ const getUser = async (req, res, next) => {
             res.send(userDb);
         } else {
             res.send("No existe un usuario con ese Id");
-        }
+        };
     } catch (error) {
         next(error);
-    }
-}
+    };
+};
 
 const getAllUsers = async (req, res, next) => {
     try {
