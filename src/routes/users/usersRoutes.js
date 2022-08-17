@@ -12,6 +12,8 @@ const {
   baseApremium,
   googleLogin,
   setProfilePicture,
+  deactivateAccount,
+  restoreAccount,
 } = require("./FuncionesUsers.js");
 const { checkAutenticacion } = require("../../middleware/authMiddleware");
 const usersRoutes = express.Router();
@@ -40,7 +42,11 @@ usersRoutes.post("/sendEmailContact", sendEmailContact);
 
 usersRoutes.post("/profileImg", setProfilePicture);
 
-usersRoutes.get ("*", (req, res) => {
+usersRoutes.put("/deactivate", deactivateAccount);
+
+usersRoutes.put("/restore", restoreAccount);
+
+usersRoutes.get("*", (req, res) => {
   res.send("Ruta invalida, revisa el nombre de la ruta");
 });
 
