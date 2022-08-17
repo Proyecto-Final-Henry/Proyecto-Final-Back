@@ -1,5 +1,5 @@
 const jwt = require ("jsonwebtoken");
-const {User, Review} = require("../db.js")
+const { User, Review } = require("../db.js");
 
 const checkAutenticacion = async (req,res,next) => {
     let token;
@@ -24,4 +24,4 @@ const checkAutenticacion = async (req,res,next) => {
     next();
 };
 
-module.exports = { checkAutenticacion }
+module.exports = { checkAutenticacion };
