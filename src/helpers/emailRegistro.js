@@ -14,6 +14,7 @@ const emailRegistro =  async (data) => {
         }
     });
 
+    //Envio de Email
     const {email,name,token} = data
     const info = await transport.sendMail({
         from: "ReMusic",
