@@ -56,27 +56,26 @@ async function getGenreArtists(id) {
   };
 };
 
-async function createGenre() {
+async function createGenre(req, res, next) {
   try {
-    const response = await axios.get(`https://api.deezer.com/genre`);
-    
     let genreCheck = await Genre.findAll();
 
     if(!genreCheck.length) {
-      for (let i = 0; i <= 5; i++) { //response.data.data.length
+      const response = await axios.get(`https://api.deezer.com/genre`);
+      for (let i = 1; i < response.data.data.length; i++) { //
         await Genre.create({ 
-          id : response.data.data.id,
-          name: response.data.data.name,
-          image : response.data.data.picture_big
+          id : response.data.data[i].id,
+          name: response.data.data[i].name,
+          image : response.data.data[i].picture_big
         });
       };
+      let allGenre = await Genre.findAll();
+      return res.json(allGenre)
+    } else {
+      return res.json(genreCheck) 
     };
-
-    let allGenre = await Genre.findAll();
-
-    return allGenre;
   } catch(error) {
-    return error;
+    next(error);
   };
 };
 module.exports = { getGenre, getGenres, getGenreArtists, createGenre };

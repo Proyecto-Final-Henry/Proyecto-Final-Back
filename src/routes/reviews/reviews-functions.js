@@ -14,7 +14,7 @@ const crear = async (req, res, next) => {
       return res.send(
         "Ya ha alcanzado la cantidad maxima de reviews posibles para el servicio base"
       );
-    };
+    }
 
     const reviewCreated = await Review.create({
       title,
@@ -37,7 +37,7 @@ const crear = async (req, res, next) => {
         const { artist } = await registerArtist(name, apiId);
         await artist.addReview(reviewCreated.id);
         break;
-    };
+    }
 
     await reviewCreated.reload();
 
@@ -57,22 +57,22 @@ const modificar = async (req, res, next) => {
 
     if (title) {
       reviewDb.title = title;
-    };
+    }
 
     if (score) {
       reviewDb.score = score;
-    };
+    }
 
     if (description) {
       reviewDb.description = description;
-    };
+    }
 
     await reviewDb.save();
 
     res.send(reviewDb);
   } catch (error) {
     next(error);
-  };
+  }
 };
 
 const getReview = async (req, res, next) => {
@@ -84,17 +84,67 @@ const getReview = async (req, res, next) => {
 
       res.send(reviewDb);
     } else {
-      const allReview = await Review.findAll({
-        include: {
-          model: User,
+      const allReviewArtists = await Review.findAll({
+        where: {
+          show: true,
+          songId: null,
+          albumId: null,
         },
+        include: [
+          {
+            model: User,
+            include: ["followers", "following"],
+          },
+          {
+            model: Artist,
+          },
+        ],
       });
 
-      res.send(allReview);
+      const allReviewAlbums = await Review.findAll({
+        where: {
+          show: true,
+          songId: null,
+          artistId: null,
+        },
+        include: [
+          {
+            model: User,
+            include: ["followers", "following"],
+          },
+          {
+            model: Album,
+          },
+        ],
+      });
+      
+      const allReviewSongs = await Review.findAll({
+        where: {
+          show: true,
+          artistId: null,
+          albumId: null,
+        },
+        include: [
+          {
+            model: User,
+            include: ["followers", "following"],
+          },
+          {
+            model: Song,
+          },
+        ],
+      });
+
+      const allReviews = allReviewArtists.concat(
+        allReviewAlbums,
+        allReviewSongs
+      );
+
+      res.send(allReviews);
     }
   } catch (error) {
     next(error);
-  };
+  }
 };
 
 const getUserReview = async (req, res, next) => {
@@ -104,6 +154,7 @@ const getUserReview = async (req, res, next) => {
     const userReviews = await Review.findAll({
       where: {
         userId: id,
+        show: true,
       },
     });
 
@@ -114,7 +165,7 @@ const getUserReview = async (req, res, next) => {
     }
   } catch (error) {
     next(error);
-  };
+  }
 };
 
 const getResourceReviews = async (req, res, next) => {
@@ -128,6 +179,7 @@ const getResourceReviews = async (req, res, next) => {
           include: [
             {
               model: Review,
+              where: { show: true },
               include: [{ model: User }],
             },
           ],
@@ -160,6 +212,7 @@ const getResourceReviews = async (req, res, next) => {
           include: [
             {
               model: Review,
+              where: { show: true },
               include: [{ model: User }],
             },
           ],
@@ -192,6 +245,7 @@ const getResourceReviews = async (req, res, next) => {
           include: [
             {
               model: Review,
+              where: { show: true },
               include: [{ model: User }],
             },
           ],
@@ -226,10 +280,23 @@ const getResourceReviews = async (req, res, next) => {
   }
 };
 
+const deleteReview = async (req, res, next) => {
+  try {
+    const { id } = req.params;
+    const reviewDb = await Review.findByPk(id);
+    reviewDb.show = false;
+    await reviewDb.save();
+    res.send("Se ha eliminado la review correctamente");
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   crear,
   modificar,
   getReview,
   getUserReview,
   getResourceReviews,
+  deleteReview,
 };

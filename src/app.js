@@ -10,11 +10,12 @@ const genresRoutes  = require("./routes/genres/genres-routes");
 const artistsRoutes  = require("./routes/artists/artists-routes");
 const albumsRoutes  = require("./routes/albums/albums-routes");
 const searchRoutes  = require('./routes/search/search-routes');
-const userRoutes = require("./routes/user/user-routes")
+const userRoutes = require("./routes/user/user-routes");
 const chatRoutes = require('./routes/Chat/ChatRoutes.js');
 const mensajeRoutes = require('./routes/Mensajes/MensajesRoutes.js');
 const { Server } = require("socket.io")
 const http = require("http");
+const playlistRoutes = require("./routes/playlist/playlist-routes");
 
 require("./db.js");
 
@@ -78,7 +79,8 @@ server.use((req, res, next) => {
   next();
 });
 
-server.use("/api/back-end/user", userRoutes)
+server.use("/api/back-end/playlist", playlistRoutes);
+server.use("/api/back-end/user", userRoutes);
 server.use("/api/back-end/reviews", reviewRoutes);
 server.use('/api/back-end/users', usersRoutes);
 server.use('/api/back-end/songs', songsRoutes);

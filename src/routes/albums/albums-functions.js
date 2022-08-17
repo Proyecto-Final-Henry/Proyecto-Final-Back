@@ -52,7 +52,7 @@ async function createAlbums(req, res, next) {
     let AlbumFind = await Album.findAll({include: Genre}); //{include: Genre}
 
     if (!AlbumFind.length) {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 200; i++) {
         const random = getRandomInt(100000, 999999);
         const response = await axios.get(`https://api.deezer.com/album/${random}`);
         if (response.data.title) {
@@ -64,11 +64,11 @@ async function createAlbums(req, res, next) {
             release_date: response.data.cover_big,
           });
 
-          if (response.data.genres && response.data.genres.data && response.data.genres.data.lenght > 1) {
+          if (response.data.genres.data) {
             let genreMap = response.data.genres.data.map(g => g.name);
             if (genreMap) {
               for (let i = 0; i < genreMap.length; i++) {
-                let genreDB = await Genre.findByPk(genreMap[i]);
+                let genreDB = await Genre.findOne({ where: { name: genreMap[i] } });
                 await newAlbum.addGenres(genreDB);
               };
             };
@@ -87,11 +87,28 @@ async function createAlbums(req, res, next) {
 
 async function getAlbums(req, res, next) {
   try {
-    let AllAlbums = await Album.findAll(); //{include: Genre}
+    let AllAlbums = await Album.findAll({include: Genre});
     return res.json(AllAlbums);
   } catch (error) {
     next(error);
   };
 };
 
-module.exports = { getAlbum, getAlbumSongs, createAlbums, getAlbums };
+async function getgenres(req, res, next) {
+  let { genre } = req.params;
+  let genreFind = await Album.findAll({
+    include: {
+      model: Genre,
+      where: {
+        name: genre
+      }
+    }
+  });
+  try {
+    return res.json(genreFind);
+  } catch (error) {
+    next(error);
+  };
+};
+
+module.exports = { getAlbum, getAlbumSongs, createAlbums, getAlbums, getgenres };

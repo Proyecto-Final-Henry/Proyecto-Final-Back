@@ -15,10 +15,11 @@ module.exports = (sequelize) => {
       },
       image: {
         type: DataTypes.STRING,
-        defaultValue:`https://i.pinimg.com/564x/66/d0/40/66d040ade1199526ea244463b2d3356b.jpg`
+        defaultValue: `https://i.pinimg.com/564x/66/d0/40/66d040ade1199526ea244463b2d3356b.jpg`,
       },
       release_date: {
         type: DataTypes.STRING,
+        defaultValue: DataTypes.DATEONLY.NOW,
       },
       apiId: {
         type: DataTypes.INTEGER,
