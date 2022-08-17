@@ -7,7 +7,7 @@ const { generarJWT } = require("../../helpers/generarJWT");
 const { generarId } = require("../../helpers/generarId.js");
 const mercadopago = require("mercadopago");
 const { cloudinary } = require("../../helpers/cloudinary");
-const { FRONTEND_URL, BACKEND_URL } = process.env
+const { FRONTEND_URL, BACKEND_URL } = process.env;
 
 const registrar = async (req, res) => {
   const { email, name } = req.body;
