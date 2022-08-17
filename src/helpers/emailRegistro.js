@@ -1,5 +1,5 @@
 const nodemailer = require ("nodemailer")
-//const sgMail = require('@sendgrid/mail');   // Yo Cristhian Alban comente esta linea por que me estaba rompiendo el back, era de madrugada y no queria molestar a nadie
+const sgMail = require('@sendgrid/mail');   // Yo Cristhian Alban comente esta linea por que me estaba rompiendo el back, era de madrugada y no queria molestar a nadie
 
 
 const emailRegistro =  async (data) => {
@@ -15,7 +15,7 @@ const emailRegistro =  async (data) => {
         }
     })
 
-    //Envio de Email
+    // //Envio de Email
     const {email,name,token} = data
     const info = await transport.sendMail({
         from: "MUSIC APP",
@@ -37,7 +37,7 @@ const emailRegistro =  async (data) => {
 //     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
 //     const msg = {
 //     to: email,
-//     from: 'mauricio.corzo47@gmail.com',
+//     from: 'music_app@tmails.net',
 //     subject: 'Comprueba tu cuenta en MUSIC AP',
 //     text: 'Comprueba tu cuenta en MUSIC APP',
 //     html: `<p>Hola ${name}, comprueba tu cuenta en MUSIC APP.</p>

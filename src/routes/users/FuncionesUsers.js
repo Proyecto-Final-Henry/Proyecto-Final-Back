@@ -87,6 +87,9 @@ const perfil = async (req,res) => {
         role: usuario.role,
         createdDate: usuario.createdDate,
         userImg: usuario.userImg,
+        reviews: usuario.reviews,
+        followers: usuario.followers,
+        following: usuario.following
     });
 };
 
@@ -154,6 +157,8 @@ const nuevaPassword = async (req, res) => {
 
 mercadopago.configure({
     access_token: "TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161"
+    // token de prueba: TEST-2455911465194012-080513-b152529ae5ceb1b3dada2600b566f507-202026161
+    // token de produccion: APP_USR-2455911465194012-080513-14612c15e2e877be43dd299f129d5eb3-202026161
     // NUMERO DE TARJETA : 4509 9535 6623 3704
     // CODIGO DE SEGURIDAD : 123
     // VENCIMIENTO : 11/25
@@ -193,7 +198,7 @@ const crearPagoMELI = async (req , res) => {
 };
 
 const baseApremium = async (req,res) => {
-    const {id } = req.params;
+    const { id } = req.params;
 	const usuario = await User.findOne({ where: { id: id}});
 	console.log(usuario.name);
 	console.log(req.query.status);
@@ -213,9 +218,8 @@ const baseApremium = async (req,res) => {
 }
 
 const googleLogin = async (req, res) => {
-   const { email , emailVerified} = req.body
+   const { email } = req.body
 
-   if(emailVerified){
     const usuario = await User.findOne({ where: { email : email } } )
 
     if(usuario){
@@ -224,17 +228,14 @@ const googleLogin = async (req, res) => {
     try {
         const nuevoUsuario = await User.create(req.body)
         nuevoUsuario.token = generarJWT(nuevoUsuario.email)
+        nuevoUsuario.password = generarId()
         nuevoUsuario.confirmado = true
         await nuevoUsuario.save()
         res.json(nuevoUsuario)
     } catch (error) {
-        console.log(error)
+        const e = new Error ("Ups algo salio mal")
+        return res.status(400).json({msg: e.message})
     }
-
-   } else {
-    const error = new Error ("Ups algo salio mal")
-    return res.status(400).json({msg: error.message})
-   }
 }
 
 const sendEmailContact = async (req, res) => {

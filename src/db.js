@@ -55,7 +55,7 @@ let capsEntries = entries.map((entry) => [
 ]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Album, Artist, Genre, Playlist, Review, Song, User } = sequelize.models;
+const { Album, Artist, Genre, Playlist, Review, Song, User, Chat , Mensaje } = sequelize.models;
 
 Song.belongsToMany(Playlist, { through: "Playlist_Songs", timestamps: false });
 // Song.belongsToMany(User, {through: "Song_Reviews", timestamps: false});
