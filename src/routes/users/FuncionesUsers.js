@@ -16,7 +16,7 @@ const registrar = async (req, res) => {
   if (existeUsuario) {
     const error = new Error("Usuario ya registrado");
     return res.status(400).json({ msg: error.message });
-  };
+  }
   try {
     const usuario = await User.create(req.body);
     usuario.password = await bcrypt.hash(usuario.password, 10);
@@ -32,12 +32,12 @@ const registrar = async (req, res) => {
 const confirmar = async (req, res) => {
   const { token } = req.params;
   console.log(token);
-  const usuarioConfirmar = await User.findOne({ where: {token: token}});
+  const usuarioConfirmar = await User.findOne({ where: { token: token } });
 
   if (!usuarioConfirmar) {
     const error = new Error("Token no valido");
     return res.status(404).json({ msg: error.message });
-  };
+  }
 
   try {
     usuarioConfirmar.token = null;
@@ -46,7 +46,7 @@ const confirmar = async (req, res) => {
     res.json({ msg: "Usuario confirmado correctamente" });
   } catch (error) {
     console.log(error);
-  };
+  }
 };
 
 const autenticar = async (req, res) => {
@@ -57,12 +57,23 @@ const autenticar = async (req, res) => {
   if (!usuario) {
     const error = new Error("Usuario inexistente");
     return res.status(404).json({ msg: error.message });
-  };
+  }
 
   if (!usuario.confirmado) {
     const error = new Error("Tu cuenta aun no ha sido confirmada");
     return res.status(403).json({ msg: error.message });
-  };
+  }
+
+  let now = new Date();
+  if (!usuario.active && now > new Date(usuario.eliminatedAt)) {
+    const error = new Error("Usuario eliminado");
+    return res.status(410).json({ msg: error.message });
+  }
+
+  if (!usuario.active) {
+    const error = new Error("El perfil fue desactivado");
+    return res.status(409).json({ msg: error.message });
+  }
 
   if (await bcrypt.compare(password, usuario.password)) {
     usuario.token = generarJWT(usuario.email);
@@ -71,7 +82,7 @@ const autenticar = async (req, res) => {
   } else {
     const error = new Error("La contraseña es incorrecto");
     return res.status(404).json({ msg: error.message });
-  };
+  }
 };
 
 const perfil = async (req, res) => {
@@ -86,7 +97,7 @@ const perfil = async (req, res) => {
     userImg: usuario.userImg,
     reviews: usuario.reviews,
     followers: usuario.followers,
-    following: usuario.following
+    following: usuario.following,
   });
 };
 
@@ -139,7 +150,7 @@ const nuevaPassword = async (req, res) => {
   if (!usuario) {
     const error = new Error("Hubo un error");
     return res.status(400).json({ msg: error.message });
-  };
+  }
 
   try {
     usuario.token = null;
@@ -217,25 +228,34 @@ const baseApremium = async (req, res) => {
 const googleLogin = async (req, res) => {
   const { email } = req.body;
 
-   const usuario = await User.findOne({ where: { email : email } },{include: [{
-    model: Review
-}, "followers", "following"]});
+  const usuario = await User.findOne(
+    { where: { email: email } },
+    {
+      include: [
+        {
+          model: Review,
+        },
+        "followers",
+        "following",
+      ],
+    }
+  );
 
-   if(usuario){
-      return res.json(usuario)
-   };
-   try {
-       const nuevoUsuario = await User.create(req.body)
-       nuevoUsuario.token = generarJWT(nuevoUsuario.email)
-       nuevoUsuario.password = generarId()
-       nuevoUsuario.confirmado = true
-       await nuevoUsuario.save()
-       console.log(nuevoUsuario)
-       res.json(nuevoUsuario)
-   } catch (error) {
-       const e = new Error ("Ups algo salio mal")
-       return res.status(400).json({msg: e.message})
-   };
+  if (usuario) {
+    return res.json(usuario);
+  }
+  try {
+    const nuevoUsuario = await User.create(req.body);
+    nuevoUsuario.token = generarJWT(nuevoUsuario.email);
+    nuevoUsuario.password = generarId();
+    nuevoUsuario.confirmado = true;
+    await nuevoUsuario.save();
+    console.log(nuevoUsuario);
+    res.json(nuevoUsuario);
+  } catch (error) {
+    const e = new Error("Ups algo salio mal");
+    return res.status(400).json({ msg: e.message });
+  }
 };
 
 const sendEmailContact = async (req, res) => {
@@ -275,6 +295,51 @@ const setProfilePicture = async (req, res, next) => {
   }
 };
 
+const deactivateAccount = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    if (!user.active) {
+      return res.status(409).json({
+        Conflict: `el perfil ya fue desactivado. Eliminación: ${user.eliminatedAt}`,
+      });
+    } else {
+      let eliminated = new Date();
+      eliminated = new Date(eliminated.setMonth(eliminated.getMonth() + 1));
+      user.set({
+        active: false,
+        eliminatedAt: eliminated,
+      });
+      await user.save();
+      res
+        .status(200)
+        .json({ OK: `eliminación de perfil: ${user.eliminatedAt}` });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
+const restoreAccount = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const now = new Date();
+    const user = await User.findByPk(userId);
+    if (!user.active && now > new Date(user.eliminatedAt)) {
+      return res.status(410).json({ Gone: "el perfil fue eliminado" });
+    } else {
+      user.set({
+        active: true,
+        eliminatedAt: null,
+      });
+      await user.save();
+      return res.status(202).json({ Accepted: "el perfil fue restaurado" });
+    }
+  } catch (error) {
+    next(error);
+  }
+};
+
 module.exports = {
   registrar,
   confirmar,
@@ -288,4 +353,6 @@ module.exports = {
   baseApremium,
   googleLogin,
   setProfilePicture,
+  deactivateAccount,
+  restoreAccount,
 };
