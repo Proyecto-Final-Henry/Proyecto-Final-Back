@@ -1,5 +1,5 @@
 const axios = require("axios");
-const { Artist, Genre } = require ("../../db.js");
+const { Artist } = require ("../../db.js");
 const limit = 20; // aqui se fija el limite de items a traer de la api
 
 async function getArtist(id) {
@@ -120,32 +120,22 @@ async function createArtists(req, res, next) {
       return Math.floor(Math.random() * (max - min) + min);
     };
 
-    let ArtistFind = await Artist.findAll(); //{include: Genre}
+    let ArtistFind = await Artist.findAll({where: {isTop: false}});
 
     if (!ArtistFind.length) {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 5; i++) {
         const random = getRandomInt(100000, 999999);
         const response = await axios.get(`https://api.deezer.com/artist/${random}`);
         if (response.data.name) {
           let newArtist = await Artist.create({
-            id: response.data.id,
+            apiId: response.data.id,
             name: response.data.name,
-            image : response.data.cover_big,
+            image : response.data.picture_big,
           });
-          // No trae el genero de artistas
-          // if (response.data.genres.data) {
-          //   let genreMap = response.data.genres.data.map(g => g.name);
-          //   if (genreMap) {
-          //     for (let i = 0; i < genreMap.length; i++) {
-          //       let genreDB = await Genre.findOne({ where: { name: genreMap[i] } });
-          //       await newArtist.addGenres(genreDB);
-          //     };
-          //   };
-          // };
         };
       };
 
-      let newArtists = await Artist.findAll();
+      let newArtists = await Artist.findAll({where: {isTop: false}});
       return res.json(newArtists);
     } else {
       return res.json(ArtistFind);
@@ -158,22 +148,22 @@ async function createArtists(req, res, next) {
 async function createTopArtists(req, res, next) {
   try {
     // let genreId = [];
-    let topArtistFind = await Artist.findAll(); //{include: Genre}
-
+    let topArtistFind = await Artist.findAll({where: {isTop: true}});
     if (!topArtistFind.length) {
       for (let a = 0; a < 5; a++) {
         const response = await axios.get(`https://api.deezer.com/genre/${a}/artists`)
         for (let i = 0; i < response.data.data.length; i++) {
           if (response.data.data) {
             let topArtist = await Artist.create({
-              id: response.data.data[i].id,
+              apiId: response.data.data[i].id,
               name: response.data.data[i].name,
-              image : response.data.data[i].cover_big,
+              image : response.data.data[i].picture_big,
+              isTop: true,
             });
           };
         };
       };
-      let topArtists = await Artist.findAll();
+      let topArtists = await Artist.findAll({where: {isTop: true}});
       return res.json(topArtists);
     } else {
       return res.json(topArtistFind);

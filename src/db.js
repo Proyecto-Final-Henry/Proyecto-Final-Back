@@ -82,6 +82,7 @@ Album.hasMany(Review);
 
 Artist.hasMany(Review);
 Artist.hasMany(Album);
+Artist.hasMany(Song);
 Artist.belongsTo(Genre);
 
 Review.belongsTo(User);
