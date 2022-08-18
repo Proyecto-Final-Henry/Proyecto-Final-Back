@@ -127,11 +127,11 @@ const getReview = async (req, res, next) => {
         include: [
           {
             model: User,
-            include: ["followers", "following"],
+            include: ["followers", "following", "likes"],
           },
           {
             model: Song,
-          },
+          }, "likes"
         ],
       });
 
@@ -292,6 +292,35 @@ const deleteReview = async (req, res, next) => {
   }
 };
 
+const likeReviews = async (req, res, next) => {
+  try {
+    const {id} = req.params;
+    const reviewDb = await Review.findByPk(id);
+    reviewDb.likes++
+    await reviewDb.save();
+    res.send(reviewDb)
+  } catch (error) {
+    next(error);
+  }
+}
+
+const likeReview = async (req, res, next) => {
+  try {
+      const{userId, reviewId} = req.params;
+      const userDb = await User.findByPk(userId);
+      const hasLike = await userDb.hasLikes(reviewId);
+
+      if (hasLike) {
+          await userDb.removeLikes(reviewId)
+          res.send("Diste dislike a esta review");
+      } else {
+          await userDb.addLikes(reviewId);
+          res.send("Diste like a esta review");
+      };
+  } catch (error) {
+      next(error);
+  };
+};
 module.exports = {
   crear,
   modificar,
@@ -299,4 +328,5 @@ module.exports = {
   getUserReview,
   getResourceReviews,
   deleteReview,
+  likeReview
 };
