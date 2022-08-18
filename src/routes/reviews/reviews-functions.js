@@ -93,11 +93,11 @@ const getReview = async (req, res, next) => {
         include: [
           {
             model: User,
-            include: ["followers", "following"],
+            include: ["followers", "following", "likes"],
           },
           {
             model: Artist,
-          },
+          }, "likes"
         ],
       });
 
@@ -110,11 +110,11 @@ const getReview = async (req, res, next) => {
         include: [
           {
             model: User,
-            include: ["followers", "following"],
+            include: ["followers", "following", "likes"],
           },
           {
             model: Album,
-          },
+          }, "likes"
         ],
       });
       
@@ -292,17 +292,6 @@ const deleteReview = async (req, res, next) => {
   }
 };
 
-const likeReviews = async (req, res, next) => {
-  try {
-    const {id} = req.params;
-    const reviewDb = await Review.findByPk(id);
-    reviewDb.likes++
-    await reviewDb.save();
-    res.send(reviewDb)
-  } catch (error) {
-    next(error);
-  }
-}
 
 const likeReview = async (req, res, next) => {
   try {
