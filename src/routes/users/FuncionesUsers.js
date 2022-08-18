@@ -181,9 +181,9 @@ const crearPagoMELI = async (req, res) => {
       },
     ],
     back_urls: {
-      success: `http://localhost:3001/api/back-end/users/feedback/${id}`, // https://remusic.onrender.com
-      failure: `http://localhost:3001/api/back-end/users/feedback/${id}`,
-      pending: `http://localhost:3001/api/back-end/users/feedback/${id}`,
+      success: `https://remusic.onrender.com/api/back-end/users/feedback/${id}`, // https://remusic.onrender.com / http://localhost:3001
+      failure: `https://remusic.onrender.com/api/back-end/users/feedback/${id}`,
+      pending: `https://remusic.onrender.com/api/back-end/users/feedback/${id}`,
     },
     auto_return: "approved",
     payment_methods: {
@@ -211,13 +211,13 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`http://localhost:3001p/pay/success`); // https://proyecto-final-front-tau.vercel.app
+      res.redirect(`https://proyecto-final-front-tau.vercel.app/pay/success`); // https://proyecto-final-front-tau.vercel.apphttps://proyecto-final-front-tau.vercel.app / http://localhost:3001
     } catch (error) {
       console.log(error);
-      res.redirect(`http://localhost:3001/pay/error`); // https://proyecto-final-front-tau.vercel.app
+      res.redirect(`https://proyecto-final-front-tau.vercel.app/pay/error`); // https://proyecto-final-front-tau.vercel.app
     }
   } else {
-    res.redirect(`http://localhost:3001/feed`); // https://proyecto-final-front-tau.vercel.app
+    res.redirect(`https://proyecto-final-front-tau.vercel.app/feed`); // https://proyecto-final-front-tau.vercel.app
   }
 };
 
