@@ -5,7 +5,8 @@ const {
   getReview,
   getUserReview,
   getResourceReviews,
-  deleteReview
+  deleteReview,
+  likeReview
 } = require("./reviews-functions");
 const router = Router();
 
@@ -22,5 +23,7 @@ router.get("/", getReview);
 router.get("/user/:id", getUserReview);
 
 router.put("/delete/:id", deleteReview);
+
+router.put("/like/:userId/:reviewId", likeReview)
 
 module.exports = router;
