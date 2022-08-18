@@ -70,11 +70,6 @@ const autenticar = async (req, res) => {
     return res.status(410).json({ msg: error.message });
   }
 
-  if (!usuario.active) {
-    const error = new Error("El perfil fue desactivado");
-    return res.status(409).json({ msg: error.message });
-  }
-
   if (await bcrypt.compare(password, usuario.password)) {
     usuario.token = generarJWT(usuario.email);
     await usuario.save();
@@ -98,6 +93,7 @@ const perfil = async (req, res) => {
     reviews: usuario.reviews,
     followers: usuario.followers,
     following: usuario.following,
+    active: usuario.active,
   });
 };
 
