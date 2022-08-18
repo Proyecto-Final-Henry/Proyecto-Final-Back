@@ -57,7 +57,7 @@ async function createAlbums(req, res, next) {
         const response = await axios.get(`https://api.deezer.com/album/${random}`);
         if (response.data.title) {
           let newAlbum = await Album.create({
-            id: response.data.id,
+            apiId: response.data.id,
             title: response.data.title,
             duration : response.data.duration,
             image : response.data.cover_big,

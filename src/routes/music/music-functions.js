@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { Song, Artist } = require ("../../db.js");
 const { CONSUMER_KEY, CONSUMER_SECRET } = process.env;
 
 async function search(query, filter) {
@@ -59,7 +60,6 @@ async function search(query, filter) {
 
 async function getRandomSongs(req, res, next) {
   try {
-
     function getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
@@ -125,4 +125,43 @@ async function getSongDetail(req, res, next) {
   };
 };
 
-module.exports = { search, getRandomSongs, getSongDetail };
+async function getTopSongs(req, res, next) {
+  try {
+    let topSongCheck = await Song.findAll({include: Artist});
+
+    if (!topSongCheck.length) {
+      let response = await axios.get("https://api.deezer.com/chart/0/tracks");
+      for (let i = 0; i < response.data.data.length; i++) {
+        if (response.data.data) {
+          let topSong = await Song.create({
+            apiId: response.data.data[i].id,
+            title: response.data.data[i].title,
+            image : response.data.data[i].artist.picture_big,
+          });
+          if (response.data.data[i].artist) {
+            let artistFind = await Artist.findOne({where:{name :response.data.data[i].artist.name }})
+            console.log(artistFind)
+              if (!artistFind) {
+                let newArtist = await Artist.create({
+                  apiId: response.data.data[i].artist.id,
+                  name: response.data.data[i].artist.name, 
+                  image : response.data.data[i].artist.picture_big,
+                });
+                let artistDb = await Artist.findOne({ where: { name: response.data.data[i].artist.name } });
+                await artistDb.addSong(topSong);
+            };
+          };
+        };
+      };
+      let topSongs = await Song.findAll({include: Artist});
+      console.log(topSongs)
+      return res.json(topSongs);
+    } else {
+      return res.json(topSongCheck);
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
+module.exports = { search, getRandomSongs, getSongDetail, getTopSongs };
