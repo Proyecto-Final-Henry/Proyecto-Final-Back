@@ -293,6 +293,7 @@ const setProfilePicture = async (req, res, next) => {
 
 const deactivateAccount = async (req, res, next) => {
   const { userId } = req.body;
+  const { role } = req.query;
   try {
     const user = await User.findByPk(userId);
     if (!user.active) {
@@ -301,7 +302,11 @@ const deactivateAccount = async (req, res, next) => {
       });
     } else {
       let eliminated = new Date();
-      eliminated = new Date(eliminated.setMonth(eliminated.getMonth() + 1));
+      if (!!role && role === "admin") {
+        eliminated = new Date(eliminated.setMonth(eliminated.getMonth() - 1));
+      } else {
+        eliminated = new Date(eliminated.setMonth(eliminated.getMonth() + 1));
+      }
       user.set({
         active: false,
         eliminatedAt: eliminated,
