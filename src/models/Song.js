@@ -16,6 +16,17 @@ module.exports = (sequelize) => {
       apiId: {
         type: DataTypes.INTEGER,
       },
+      img: {
+        type: DataTypes.STRING,
+        defaultValue: `https://i.pinimg.com/564x/66/d0/40/66d040ade1199526ea244463b2d3356b.jpg`,
+      },
+      preview: {
+        type: DataTypes.STRING,
+        defaultValue: null,
+      },
+      duration: {
+        type: DataTypes.INTEGER,
+      },
     },
     { timestamps: false }
   );
