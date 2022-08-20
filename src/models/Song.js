@@ -13,6 +13,9 @@ module.exports = (sequelize) => {
         type: DataTypes.STRING,
         allowNull: false,
       },
+      fixAlbumId: {
+        type: DataTypes.INTEGER,
+      },
       apiId: {
         type: DataTypes.INTEGER,
       },
