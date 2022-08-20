@@ -336,6 +336,50 @@ const restoreAccount = async (req, res, next) => {
   }
 };
 
+const adminPremium = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    if (user.role === "Premium") {
+      return res.status(409).json({
+        Conflict: `El usuario ya es premium`,
+      });
+    } else {
+      user.set({
+        role: "Premium",
+      });
+      await user.save();
+      res
+        .status(200)
+        .json({ OK: `Usuario ${user.name} ahora es premium` });
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
+const giveAdmin = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    if (user.role === "Admin") {
+      return res.status(409).json({
+        Conflict: `El usuario ya es Admin`,
+      });
+    } else {
+      user.set({
+        role: "Admin",
+      });
+      await user.save();
+      res
+        .status(200)
+        .json({ OK: `Usuario ${user.name} ahora es Admin` });
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
 module.exports = {
   registrar,
   confirmar,
@@ -351,4 +395,6 @@ module.exports = {
   setProfilePicture,
   deactivateAccount,
   restoreAccount,
+  adminPremium,
+  giveAdmin,
 };

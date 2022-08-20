@@ -14,6 +14,8 @@ const {
   setProfilePicture,
   deactivateAccount,
   restoreAccount,
+  adminPremium,
+  giveAdmin,
 } = require("./FuncionesUsers.js");
 const { checkAutenticacion } = require("../../middleware/authMiddleware");
 const usersRoutes = express.Router();
@@ -45,6 +47,10 @@ usersRoutes.post("/profileImg", setProfilePicture);
 usersRoutes.put("/deactivate", deactivateAccount);
 
 usersRoutes.put("/restore", restoreAccount);
+
+usersRoutes.put("/adminpremium", adminPremium);
+
+usersRoutes.put("/giveadmin", giveAdmin);
 
 usersRoutes.get("*", (req, res) => {
   res.send("Ruta invalida, revisa el nombre de la ruta");
