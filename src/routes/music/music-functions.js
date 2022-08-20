@@ -137,10 +137,10 @@ async function getTopSongs(req, res, next) {
             apiId: response.data.data[i].id,
             title: response.data.data[i].title,
             image : response.data.data[i].artist.picture_big,
+            fixAlbumId: response.data.data[i].album.id,
           });
           if (response.data.data[i].artist) {
             let artistFind = await Artist.findOne({where:{name :response.data.data[i].artist.name }})
-            console.log(artistFind)
               if (!artistFind) {
                 let newArtist = await Artist.create({
                   apiId: response.data.data[i].artist.id,
@@ -154,7 +154,6 @@ async function getTopSongs(req, res, next) {
         };
       };
       let topSongs = await Song.findAll({include: Artist});
-      console.log(topSongs)
       return res.json(topSongs);
     } else {
       return res.json(topSongCheck);
