@@ -83,6 +83,8 @@ const removeSongs = async (req, res, next) => {
         const { playlistId } = req.params;
         const { name, id } = req.body;
 
+        console.log(name, id)
+
         const { song } = await registerSong(name, id);
 
         const playlistDb = await Playlist.findByPk(playlistId);
@@ -102,7 +104,7 @@ const getUserPlaylist = async (req, res, next) => {
         const {id} = req.params;
 
         const playlistDb = await Playlist.findAll({
-            where: {userId: id, show: true}
+            where: {userId: id, show: true}, include:[{model: Song}]
         });
 
         if (playlistDb) {
