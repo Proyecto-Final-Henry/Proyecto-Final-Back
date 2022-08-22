@@ -9,7 +9,7 @@ async function registerSong(name, apiId) {
     let apiSong = {
       preview: result.data.preview,
       duration: result.data.duration,
-      img: result.data.album.cover_big,
+      image: result.data.album.cover_big,
       artist: result.data.artist.name,
       artistId: result.data.artist.id,
       album: result.data.album.title,

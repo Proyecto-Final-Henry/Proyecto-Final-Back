@@ -84,7 +84,7 @@ async function getRandomSongs(req, res, next) {
     songs2.map(result=> {
       if(!result.data.error){
         songs.push({
-          id: result.data.id,
+          apiId: result.data.id,
           title: result.data.title,
           artist: result.data.artist.name,
           artistId: result.data.artist.id,

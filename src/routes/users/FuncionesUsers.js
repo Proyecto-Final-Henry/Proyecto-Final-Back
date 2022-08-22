@@ -75,7 +75,7 @@ const autenticar = async (req, res) => {
     await usuario.save();
     res.json(usuario);
   } else {
-    const error = new Error("La contraseña es incorrecto");
+    const error = new Error("La contraseña es incorrecta");
     return res.status(404).json({ msg: error.message });
   }
 };
@@ -110,14 +110,12 @@ const olvidePassword = async (req, res) => {
   try {
     usuarioExiste.token = generarId();
     await usuarioExiste.save();
-
     //Envio de Email
     emailOlvidePassword({
       email,
       name: usuarioExiste.name,
       token: usuarioExiste.token,
     });
-
     res.json({ msg: "Hemos enviado el mail con las instrucciones" });
   } catch (error) {
     console.log(error);
@@ -134,7 +132,7 @@ const comprobarToken = async (req, res) => {
   } else {
     const error = new Error("Token no valido");
     return res.status(400).json({ msg: error.message });
-  }
+  };
 };
 
 const nuevaPassword = async (req, res) => {
@@ -146,8 +144,7 @@ const nuevaPassword = async (req, res) => {
   if (!usuario) {
     const error = new Error("Hubo un error");
     return res.status(400).json({ msg: error.message });
-  }
-
+  };
   try {
     usuario.token = null;
     usuario.password = await bcrypt.hash(password, 10);
@@ -155,7 +152,7 @@ const nuevaPassword = async (req, res) => {
     res.json({ msg: "Contraseña modificada correctamente" });
   } catch (error) {
     console.log(error);
-  }
+  };
 };
 
 mercadopago.configure({
@@ -211,7 +208,7 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`http://localhost:3001p/pay/success`); // https://proyecto-final-front-tau.vercel.app
+      res.redirect(`http://localhost:3001/pay/success`); // https://proyecto-final-front-tau.vercel.app
     } catch (error) {
       console.log(error);
       res.redirect(`http://localhost:3001/pay/error`); // https://proyecto-final-front-tau.vercel.app
