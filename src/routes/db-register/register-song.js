@@ -21,7 +21,7 @@ async function registerSong(name, apiId) {
         apiId: apiId,
         preview: apiSong.preview,
         duration: apiSong.duration,
-        img: apiSong.img,
+        image: apiSong.image,
       },
     });
     const { album } = await registerAlbum(apiSong.album, apiSong.albumId);
