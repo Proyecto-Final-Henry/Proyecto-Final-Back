@@ -51,13 +51,14 @@ io.on("connection", (socket) => {
     console.log("Usuarios conectados", onlineUsers)
   });
 
-  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+  socket.on("sendNotification", ({ senderName, receiverName, type, title }) => {
     console.log(senderName, receiverName, type)
     const receiver = getUser(receiverName);
     console.log(receiver)
     io.to(receiver.socketId).emit("getNotification", {
       senderName,
       type,
+      title
     });
   });
 
