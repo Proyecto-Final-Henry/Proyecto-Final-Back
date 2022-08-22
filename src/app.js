@@ -19,6 +19,96 @@ require("./db.js");
 
 const server = express();
 
+const serverSocketIo = http.createServer(server)
+const io = new Server(serverSocketIo , {
+  cors: {
+    origin: "*"
+  }
+})
+
+
+
+
+let onlineUsers = [];
+
+const addNewUser = (username, socketId) => {
+  !onlineUsers.some((user) => user.username === username) &&
+    onlineUsers.push({ username, socketId });
+};
+
+const removeUser = (socketId) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (username) => {
+  return onlineUsers.find((user) => user.username === username);
+};
+
+
+io.on("connection", (socket) => {
+  socket.on("newUser", (username) => {
+    addNewUser(username, socket.id);
+    console.log("Usuarios conectados", onlineUsers)
+  });
+
+  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+    console.log(senderName, receiverName, type)
+    const receiver = getUser(receiverName);
+    console.log(receiver)
+    io.to(receiver.socketId).emit("getNotification", {
+      senderName,
+      type,
+    });
+  });
+
+  socket.on("sendText", ({ senderName, receiverName, text }) => {
+    const receiver = getUser(receiverName);
+    io.to(receiver.socketId).emit("getText", {
+      senderName,
+      text,
+    });
+  });
+
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
+});
+
+
+
+let activeUsers = []
+
+io.on("connection", (socket) => {
+  
+  // agregar nuevo usuario
+  socket.on("new-user-add",(newUserId) => {
+    if(!activeUsers.some(user => user.userId === newUserId && newUserId)){
+      activeUsers.push({
+        userId: newUserId,
+        socketId: socket.id
+      })
+    }
+    io.emit("get-users", activeUsers)
+    console.log("Usuarios conectados", activeUsers)
+  })
+
+  socket.on("send-message" , (data) => {
+    const { receiverId } = data
+    const user = activeUsers.find(user => user.userId === receiverId)
+
+    if(user){
+      io.to(user.socketId).emit("receive-message", data)
+    }
+  })
+
+  socket.on("disconnect", () => {
+    activeUsers = activeUsers.filter(user => user.socketId !== socket.id)
+    console.log("User desconectado" , activeUsers)
+    io.emit("get-users", activeUsers)
+  })
+
+})
+
 server.name = "API";
 
 server.use(cors());
@@ -47,22 +137,7 @@ server.use('/api/back-end/artists', artistsRoutes);
 server.use('/api/back-end/albums', albumsRoutes);
 server.use('/api/back-end/search', searchRoutes);
 
-const serverSocketIo = http.createServer(server)
-const io = new Server(serverSocketIo , {
-  cors: {
-    origin: "*"
-  }
-})
 
-io.on("connection", (socket) => {
-  console.log(socket.id)
-  console.log("user conectado")
-  io.emit('firstEvent','Hello this is a test')
-  socket.on("mensaje", (mensaje) => {
-    console.log(mensaje)
-  })
-
-})
 
 // Error catching endware.
 server.use((err, req, res, next) => {
