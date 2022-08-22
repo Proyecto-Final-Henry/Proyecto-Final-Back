@@ -28,47 +28,6 @@ const io = new Server(serverSocketIo , {
 })
 
 
-let activeUsers = []
-
-io.on("connection", (socket) => {
-  
-  // agregar nuevo usuario
-  socket.on("new-user-add",(newUserId) => {
-    if(!activeUsers.some(user => user.userId === newUserId && newUserId)){
-      activeUsers.push({
-        userId: newUserId,
-        socketId: socket.id
-      })
-    }
-    io.emit("get-users", activeUsers)
-    console.log("Usuarios conectados", activeUsers)
-  })
-
-  socket.on("send-message" , (data) => {
-    const { receiverId } = data
-    const user = activeUsers.find(user => user.userId === receiverId)
-
-    if(user){
-      io.to(user.socketId).emit("receive-message", data)
-    }
-  })
-
-  socket.on("disconnect", () => {
-    activeUsers = activeUsers.filter(user => user.socketId !== socket.id)
-    console.log("User desconectado" , activeUsers)
-    io.emit("get-users", activeUsers)
-  })
-
-})
-
-const serverSocketIo = http.createServer(server)
-const io = new Server(serverSocketIo , {
-  cors: {
-    origin: "*"
-  }
-})
-
-
 
 
 let onlineUsers = [];
@@ -93,13 +52,14 @@ io.on("connection", (socket) => {
     console.log("Usuarios conectados", onlineUsers)
   });
 
-  socket.on("sendNotification", ({ senderName, receiverName, type }) => {
+  socket.on("sendNotification", ({ senderName, receiverName, type, title }) => {
     console.log(senderName, receiverName, type)
     const receiver = getUser(receiverName);
     console.log(receiver)
     io.to(receiver.socketId).emit("getNotification", {
       senderName,
       type,
+      title
     });
   });
 
