@@ -120,22 +120,22 @@ async function createArtists(req, res, next) {
       return Math.floor(Math.random() * (max - min) + min);
     };
 
-    let ArtistFind = await Artist.findAll({where: {isTop: false}});
+    let ArtistFind = await Artist.findAll({where: {isRandom: true}});
 
     if (!ArtistFind.length) {
-      for (let i = 0; i < 5; i++) {
-        const random = getRandomInt(100000, 999999);
+      for (let i = 0; i < 30; i++) {
+        const random = getRandomInt(100000, 9999999);
         const response = await axios.get(`https://api.deezer.com/artist/${random}`);
         if (response.data.name) {
           let newArtist = await Artist.create({
             apiId: response.data.id,
             name: response.data.name,
-            image : response.data.picture_big,
+            image : response.data.picture_big === "https://e-cdns-images.dzcdn.net/images/artist//500x500-000000-80-0-0.jpg" ? "https://cdn-icons-png.flaticon.com/512/1753/1753311.png" : response.data.picture_big ,
+            isRandom: true,
           });
         };
       };
-
-      let newArtists = await Artist.findAll({where: {isTop: false}});
+      let newArtists = await Artist.findAll({where: {isRandom: true}});
       return res.json(newArtists);
     } else {
       return res.json(ArtistFind);
@@ -147,7 +147,6 @@ async function createArtists(req, res, next) {
 
 async function createTopArtists(req, res, next) {
   try {
-    // let genreId = [];
     let topArtistFind = await Artist.findAll({where: {isTop: true}});
     if (!topArtistFind.length) {
       for (let a = 0; a < 5; a++) {

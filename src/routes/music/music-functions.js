@@ -76,7 +76,7 @@ async function getRandomSongs(req, res, next) {
       let url = `https://api.deezer.com/track/${random}`;
       arrayUrlPromise.push(url);
       
-    } while (count < 10);
+    } while (count < 30);
     const promises= arrayUrlPromise.map((url)=>{
       return axios.get(url)
     })
@@ -88,7 +88,7 @@ async function getRandomSongs(req, res, next) {
           title: result.data.title,
           artist: result.data.artist.name,
           artistId: result.data.artist.id,
-          img: result.data.album.cover_big,
+          image: result.data.album.cover_big,
           album: result.data.album.title,
           albumId: result.data.album.id,
         })
@@ -114,7 +114,7 @@ async function getSongDetail(req, res, next) {
         duration: result.data.duration,
         artist: result.data.artist.name,
         artistId: result.data.artist.id,
-        img: result.data.album.cover_big,
+        image: result.data.album.cover_big,
         album: result.data.album.title,
         albumId: result.data.album.id,
       };
@@ -136,6 +136,7 @@ async function getTopSongs(req, res, next) {
           let topSong = await Song.create({
             apiId: response.data.data[i].id,
             title: response.data.data[i].title,
+            duration: response.data.data[i].duration,
             image : response.data.data[i].artist.picture_big,
             fixAlbumId: response.data.data[i].album.id,
           });
