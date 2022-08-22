@@ -21,6 +21,10 @@ module.exports = (sequelize) => {
         type: DataTypes.BOOLEAN,
         defaultValue: false,
       },
+      isRandom: {
+        type: DataTypes.BOOLEAN,
+        defaultValue: false,
+      },
       apiId: {
         type: DataTypes.INTEGER,
       },
