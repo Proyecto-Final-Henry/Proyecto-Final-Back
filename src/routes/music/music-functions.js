@@ -1,4 +1,5 @@
 const axios = require("axios");
+const { Song, Artist } = require ("../../db.js");
 const { CONSUMER_KEY, CONSUMER_SECRET } = process.env;
 
 async function search(query, filter) {
@@ -59,7 +60,6 @@ async function search(query, filter) {
 
 async function getRandomSongs(req, res, next) {
   try {
-
     function getRandomInt(min, max) {
       min = Math.ceil(min);
       max = Math.floor(max);
@@ -76,7 +76,7 @@ async function getRandomSongs(req, res, next) {
       let url = `https://api.deezer.com/track/${random}`;
       arrayUrlPromise.push(url);
       
-    } while (count < 10);
+    } while (count < 30);
     const promises= arrayUrlPromise.map((url)=>{
       return axios.get(url)
     })
@@ -84,11 +84,11 @@ async function getRandomSongs(req, res, next) {
     songs2.map(result=> {
       if(!result.data.error){
         songs.push({
-          id: result.data.id,
+          apiId: result.data.id,
           title: result.data.title,
           artist: result.data.artist.name,
           artistId: result.data.artist.id,
-          img: result.data.album.cover_big,
+          image: result.data.album.cover_big,
           album: result.data.album.title,
           albumId: result.data.album.id,
         })
@@ -114,7 +114,7 @@ async function getSongDetail(req, res, next) {
         duration: result.data.duration,
         artist: result.data.artist.name,
         artistId: result.data.artist.id,
-        img: result.data.album.cover_big,
+        image: result.data.album.cover_big,
         album: result.data.album.title,
         albumId: result.data.album.id,
       };
@@ -125,4 +125,43 @@ async function getSongDetail(req, res, next) {
   };
 };
 
-module.exports = { search, getRandomSongs, getSongDetail };
+async function getTopSongs(req, res, next) {
+  try {
+    let topSongCheck = await Song.findAll({include: Artist});
+
+    if (!topSongCheck.length) {
+      let response = await axios.get("https://api.deezer.com/chart/0/tracks");
+      for (let i = 0; i < response.data.data.length; i++) {
+        if (response.data.data) {
+          let topSong = await Song.create({
+            apiId: response.data.data[i].id,
+            title: response.data.data[i].title,
+            duration: response.data.data[i].duration,
+            image : response.data.data[i].artist.picture_big,
+            fixAlbumId: response.data.data[i].album.id,
+          });
+          if (response.data.data[i].artist) {
+            let artistFind = await Artist.findOne({where:{name :response.data.data[i].artist.name }})
+              if (!artistFind) {
+                let newArtist = await Artist.create({
+                  apiId: response.data.data[i].artist.id,
+                  name: response.data.data[i].artist.name, 
+                  image : response.data.data[i].artist.picture_big,
+                });
+                let artistDb = await Artist.findOne({ where: { name: response.data.data[i].artist.name } });
+                await artistDb.addSong(topSong);
+            };
+          };
+        };
+      };
+      let topSongs = await Song.findAll({include: Artist});
+      return res.json(topSongs);
+    } else {
+      return res.json(topSongCheck);
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
+module.exports = { search, getRandomSongs, getSongDetail, getTopSongs };

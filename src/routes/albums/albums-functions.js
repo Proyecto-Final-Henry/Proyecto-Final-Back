@@ -52,12 +52,12 @@ async function createAlbums(req, res, next) {
     let AlbumFind = await Album.findAll({include: Genre}); //{include: Genre}
 
     if (!AlbumFind.length) {
-      for (let i = 0; i < 20; i++) {
+      for (let i = 0; i < 200; i++) {
         const random = getRandomInt(100000, 999999);
         const response = await axios.get(`https://api.deezer.com/album/${random}`);
         if (response.data.title) {
           let newAlbum = await Album.create({
-            id: response.data.id,
+            apiId: response.data.id,
             title: response.data.title,
             duration : response.data.duration,
             image : response.data.cover_big,
@@ -96,6 +96,23 @@ async function getAlbums(req, res, next) {
 
 async function getgenres(req, res, next) {
   let { genre } = req.params;
+
+  if (genre === "Rap" || genre === "Hip%20Hop") {
+    genre = "Rap/Hip Hop"
+  };
+
+  if (genre === "Película" || genre === "Juegos" || genre === "Movies" || genre === "Games") {
+    genre = "Películas/Juegos"
+  };
+
+  if (genre === "Classical") {
+    genre = "Clásica"
+  };
+
+  if (genre === "Techno" || genre === "House") {
+    genre = "Techno/House"
+  };
+
   let genreFind = await Album.findAll({
     include: {
       model: Genre,

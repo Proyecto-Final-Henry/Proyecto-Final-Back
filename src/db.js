@@ -55,7 +55,7 @@ let capsEntries = entries.map((entry) => [
 ]);
 sequelize.models = Object.fromEntries(capsEntries);
 
-const { Album, Artist, Genre, Playlist, Review, Song, User } = sequelize.models;
+const { Album, Artist, Genre, Playlist, Review, Song, User, Chat , Mensaje } = sequelize.models;
 
 Song.belongsToMany(Playlist, { through: "Playlist_Songs", timestamps: false });
 // Song.belongsToMany(User, {through: "Song_Reviews", timestamps: false});
@@ -70,24 +70,28 @@ User.belongsToMany(Song, { through: "Liked_Songs", timestamps: false });
 User.belongsToMany(Song, { through: "Listen_Later", timestamps: false });
 User.hasMany(Review); // written reviews
 
-User.hasMany(Playlist)
+User.hasMany(Playlist);
 
-User.belongsToMany(User, { as: "followers" ,through: "User_Followers", foreignKey: "follower_id", otherKey: "following_id",timestamps: false })
-User.belongsToMany(User, { as: "following" ,through: "User_Followers", foreignKey: "following_id", otherKey: "follower_id" ,timestamps: false })
+User.belongsToMany(User, { as: "followers" ,through: "User_Followers", foreignKey: "follower_id", otherKey: "following_id",timestamps: false });
+User.belongsToMany(User, { as: "following" ,through: "User_Followers", foreignKey: "following_id", otherKey: "follower_id" ,timestamps: false });
 
 Album.belongsTo(Artist);
-Album.belongsToMany(Genre, { through: "Album_Genre", timestamps: false });;
+Album.belongsToMany(Genre, { through: "Album_Genre", timestamps: false });
 Album.hasMany(Song);
 Album.hasMany(Review);
 
 Artist.hasMany(Review);
 Artist.hasMany(Album);
-Artist.hasMany(Review);
+Artist.hasMany(Song);
+Artist.belongsTo(Genre);
 
 Review.belongsTo(User);
 Review.belongsTo(Song);
 Review.belongsTo(Album);
 Review.belongsTo(Artist);
+Review.belongsToMany(User, {as: "likes", through: "Reviews_likes", timestamps: false})
+User.belongsToMany(Review, {as: "likes", through: "Reviews_likes", timestamps: false})
+
 
 Playlist.belongsToMany(Song, { through: "Playlist_Songs", timestamps: false });
 // Playlist.hasMany(Song);

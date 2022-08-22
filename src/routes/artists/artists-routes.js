@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { getArtist,getArtists,getArtistSongs,getArtistSongsTop,getArtistAlbums } = require("./artists-functions");
+const { getArtist, getArtists, getArtistSongs, getArtistSongsTop, getArtistAlbums, createArtists, createTopArtists } = require("./artists-functions");
 
 router.get("/", async (req, res) => {
     const { artist } = req.query;
@@ -15,8 +15,8 @@ router.get("/", async (req, res) => {
     } catch (error) {
         console.log(error);
     };
-
 });
+
 router.get("/artistsongs", async (req, res) => {
     const { artist, index } = req.query;
     try {
@@ -58,5 +58,9 @@ router.get("/artistsongstop", async (req, res) => {
         console.log(error);
     };
 });
+
+router.get("/create", createArtists);
+
+router.get("/createtop", createTopArtists);
 
 module.exports = router;

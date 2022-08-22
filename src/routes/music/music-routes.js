@@ -1,6 +1,6 @@
 const express = require("express");
 const router = express.Router();
-const { search, getRandomSongs, getSongDetail } = require("./music-functions");
+const { search, getRandomSongs, getSongDetail, getTopSongs } = require("./music-functions");
 
 router.get("/search", async (req, res) => {
   try {
@@ -13,6 +13,8 @@ router.get("/search", async (req, res) => {
 });
 
 router.get("/random", getRandomSongs);
+
+router.get("/topdb", getTopSongs);
 
 router.get("/", getSongDetail);
 
