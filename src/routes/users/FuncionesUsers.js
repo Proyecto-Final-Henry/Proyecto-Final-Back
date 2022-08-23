@@ -208,7 +208,7 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`https://proyecto-final-front-tau.vercel.app/pay/success`); // https://proyecto-final-front-tau.vercel.apphttps://proyecto-final-front-tau.vercel.app / http://localhost:3001
+      res.redirect(`https://proyecto-final-front-tau.vercel.app/pay/success`); // https://proyecto-final-front-tau.vercel.app / http://localhost:3001
     } catch (error) {
       console.log(error);
       res.redirect(`https://proyecto-final-front-tau.vercel.app/pay/error`); // https://proyecto-final-front-tau.vercel.app

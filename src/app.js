@@ -76,7 +76,6 @@ io.on("connection", (socket) => {
 let activeUsers = [];
 
 io.on("connection", (socket) => {
-  
   // agregar nuevo usuario
   socket.on("new-user-add",(newUserId) => {
     if(!activeUsers.some(user => user.userId === newUserId && newUserId)){
