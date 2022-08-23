@@ -27,9 +27,6 @@ const io = new Server(serverSocketIo , {
   }
 })
 
-
-
-
 let onlineUsers = [];
 
 const addNewUser = (username, socketId) => {
@@ -76,9 +73,7 @@ io.on("connection", (socket) => {
   });
 });
 
-
-
-let activeUsers = []
+let activeUsers = [];
 
 io.on("connection", (socket) => {
   
@@ -109,7 +104,7 @@ io.on("connection", (socket) => {
     io.emit("get-users", activeUsers)
   })
 
-})
+});
 
 server.name = "API";
 
@@ -138,10 +133,8 @@ server.use('/api/back-end/genres', genresRoutes);
 server.use('/api/back-end/artists', artistsRoutes);
 server.use('/api/back-end/albums', albumsRoutes);
 server.use('/api/back-end/search', searchRoutes);
-server.use('/api/back-end/chat', chatRoutes)
-server.use('/api/back-end/mensajes', mensajeRoutes)
-
-
+server.use('/api/back-end/chat', chatRoutes);
+server.use('/api/back-end/mensajes', mensajeRoutes);
 
 // Error catching endware.
 server.use((err, req, res, next) => {
@@ -151,6 +144,5 @@ server.use((err, req, res, next) => {
   console.error(err);
   res.status(status).send({ message });
 });
-
 
 module.exports = {server , serverSocketIo};
