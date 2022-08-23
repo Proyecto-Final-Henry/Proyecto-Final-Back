@@ -76,7 +76,7 @@ async function getRandomSongs(req, res, next) {
       let url = `https://api.deezer.com/track/${random}`;
       arrayUrlPromise.push(url);
       
-    } while (count < 10);
+    } while (count < 30);
     const promises= arrayUrlPromise.map((url)=>{
       return axios.get(url)
     })
@@ -84,11 +84,11 @@ async function getRandomSongs(req, res, next) {
     songs2.map(result=> {
       if(!result.data.error){
         songs.push({
-          id: result.data.id,
+          apiId: result.data.id,
           title: result.data.title,
           artist: result.data.artist.name,
           artistId: result.data.artist.id,
-          img: result.data.album.cover_big,
+          image: result.data.album.cover_big,
           album: result.data.album.title,
           albumId: result.data.album.id,
         })
@@ -114,7 +114,7 @@ async function getSongDetail(req, res, next) {
         duration: result.data.duration,
         artist: result.data.artist.name,
         artistId: result.data.artist.id,
-        img: result.data.album.cover_big,
+        image: result.data.album.cover_big,
         album: result.data.album.title,
         albumId: result.data.album.id,
       };
@@ -136,11 +136,12 @@ async function getTopSongs(req, res, next) {
           let topSong = await Song.create({
             apiId: response.data.data[i].id,
             title: response.data.data[i].title,
+            duration: response.data.data[i].duration,
             image : response.data.data[i].artist.picture_big,
+            fixAlbumId: response.data.data[i].album.id,
           });
           if (response.data.data[i].artist) {
             let artistFind = await Artist.findOne({where:{name :response.data.data[i].artist.name }})
-            console.log(artistFind)
               if (!artistFind) {
                 let newArtist = await Artist.create({
                   apiId: response.data.data[i].artist.id,
@@ -154,7 +155,6 @@ async function getTopSongs(req, res, next) {
         };
       };
       let topSongs = await Song.findAll({include: Artist});
-      console.log(topSongs)
       return res.json(topSongs);
     } else {
       return res.json(topSongCheck);

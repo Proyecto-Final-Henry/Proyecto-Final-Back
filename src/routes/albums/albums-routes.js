@@ -36,4 +36,8 @@ router.get("/getall", getAlbums);
 
 router.get("/getgenres/:genre", getgenres);
 
+router.get("/getgenres/:genre/:subgenre", getgenres);
+
+router.get("/getgenres/:genre/:subgenre/:subsubgenre", getgenres);
+
 module.exports = router;

@@ -96,6 +96,23 @@ async function getAlbums(req, res, next) {
 
 async function getgenres(req, res, next) {
   let { genre } = req.params;
+
+  if (genre === "Rap" || genre === "Hip%20Hop") {
+    genre = "Rap/Hip Hop"
+  };
+
+  if (genre === "Película" || genre === "Juegos" || genre === "Movies" || genre === "Games") {
+    genre = "Películas/Juegos"
+  };
+
+  if (genre === "Classical") {
+    genre = "Clásica"
+  };
+
+  if (genre === "Techno" || genre === "House") {
+    genre = "Techno/House"
+  };
+
   let genreFind = await Album.findAll({
     include: {
       model: Genre,

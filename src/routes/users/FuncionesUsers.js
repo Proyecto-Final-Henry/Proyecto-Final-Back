@@ -75,7 +75,7 @@ const autenticar = async (req, res) => {
     await usuario.save();
     res.json(usuario);
   } else {
-    const error = new Error("La contraseña es incorrecto");
+    const error = new Error("La contraseña es incorrecta");
     return res.status(404).json({ msg: error.message });
   }
 };
@@ -110,14 +110,12 @@ const olvidePassword = async (req, res) => {
   try {
     usuarioExiste.token = generarId();
     await usuarioExiste.save();
-
     //Envio de Email
     emailOlvidePassword({
       email,
       name: usuarioExiste.name,
       token: usuarioExiste.token,
     });
-
     res.json({ msg: "Hemos enviado el mail con las instrucciones" });
   } catch (error) {
     console.log(error);
@@ -134,7 +132,7 @@ const comprobarToken = async (req, res) => {
   } else {
     const error = new Error("Token no valido");
     return res.status(400).json({ msg: error.message });
-  }
+  };
 };
 
 const nuevaPassword = async (req, res) => {
@@ -146,8 +144,7 @@ const nuevaPassword = async (req, res) => {
   if (!usuario) {
     const error = new Error("Hubo un error");
     return res.status(400).json({ msg: error.message });
-  }
-
+  };
   try {
     usuario.token = null;
     usuario.password = await bcrypt.hash(password, 10);
@@ -155,7 +152,7 @@ const nuevaPassword = async (req, res) => {
     res.json({ msg: "Contraseña modificada correctamente" });
   } catch (error) {
     console.log(error);
-  }
+  };
 };
 
 mercadopago.configure({
@@ -293,6 +290,7 @@ const setProfilePicture = async (req, res, next) => {
 
 const deactivateAccount = async (req, res, next) => {
   const { userId } = req.body;
+  const { role } = req.query;
   try {
     const user = await User.findByPk(userId);
     if (!user.active) {
@@ -301,7 +299,11 @@ const deactivateAccount = async (req, res, next) => {
       });
     } else {
       let eliminated = new Date();
-      eliminated = new Date(eliminated.setMonth(eliminated.getMonth() + 1));
+      if (!!role && role === "admin") {
+        eliminated = new Date(eliminated.setMonth(eliminated.getMonth() - 1));
+      } else {
+        eliminated = new Date(eliminated.setMonth(eliminated.getMonth() + 1));
+      }
       user.set({
         active: false,
         eliminatedAt: eliminated,
@@ -336,6 +338,94 @@ const restoreAccount = async (req, res, next) => {
   }
 };
 
+const givePremium = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    if (user.role === "Premium") {
+      return res.status(409).json({
+        Conflict: `El usuario ya es premium`,
+      });
+    } else {
+      user.set({
+        role: "Premium",
+      });
+      await user.save();
+      res
+        .status(200)
+        .json({ OK: `Usuario ${user.name} ahora es premium` });
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
+const takePremium = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    if (user.role !== "Premium") {
+      return res.status(409).json({
+        Conflict: `Este usuario no es premium`,
+      });
+    } else {
+      user.set({
+        role: "Gratuito",
+      });
+      await user.save();
+      res
+        .status(200)
+        .json({ OK: `Usuario ${user.name} ya no es premium` });
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
+const giveAdmin = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    if (user.role === "Admin") {
+      return res.status(409).json({
+        Conflict: `El usuario ya es Admin`,
+      });
+    } else {
+      user.set({
+        role: "Admin",
+      });
+      await user.save();
+      res
+        .status(200)
+        .json({ OK: `Usuario ${user.name} ahora es Admin` });
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
+const takeAdmin = async (req, res, next) => {
+  const { userId } = req.body;
+  try {
+    const user = await User.findByPk(userId);
+    if (user.role !== "Admin") {
+      return res.status(409).json({
+        Conflict: `Este usuario no es Admin`,
+      });
+    } else {
+      user.set({
+        role: "Gratuito",
+      });
+      await user.save();
+      res
+        .status(200)
+        .json({ OK: `Usuario ${user.name} ya no es Admin` });
+    };
+  } catch (error) {
+    next(error);
+  };
+};
+
 module.exports = {
   registrar,
   confirmar,
@@ -351,4 +441,8 @@ module.exports = {
   setProfilePicture,
   deactivateAccount,
   restoreAccount,
+  givePremium,
+  takePremium,
+  giveAdmin,
+  takeAdmin,
 };
