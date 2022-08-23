@@ -123,7 +123,7 @@ async function createArtists(req, res, next) {
     let ArtistFind = await Artist.findAll({where: {isRandom: true}});
 
     if (!ArtistFind.length) {
-      for (let i = 0; i < 30; i++) {
+      for (let i = 0; i < 50; i++) {
         const random = getRandomInt(100000, 9999999);
         const response = await axios.get(`https://api.deezer.com/artist/${random}`);
         if (response.data.name) {

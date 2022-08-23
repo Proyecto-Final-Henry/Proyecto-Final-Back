@@ -208,13 +208,13 @@ const baseApremium = async (req, res) => {
     try {
       usuario.role = "Premium";
       await usuario.save();
-      res.redirect(`http://localhost:3001/pay/success`); // https://proyecto-final-front-tau.vercel.app
+      res.redirect(`http://localhost:3000/pay/success`); // https://proyecto-final-front-tau.vercel.app
     } catch (error) {
       console.log(error);
-      res.redirect(`http://localhost:3001/pay/error`); // https://proyecto-final-front-tau.vercel.app
+      res.redirect(`http://localhost:3000/pay/error`); // https://proyecto-final-front-tau.vercel.app
     }
   } else {
-    res.redirect(`http://localhost:3001/feed`); // https://proyecto-final-front-tau.vercel.app
+    res.redirect(`http://localhost:3000/feed`); // https://proyecto-final-front-tau.vercel.app
   }
 };
 
