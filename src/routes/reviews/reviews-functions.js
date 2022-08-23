@@ -97,7 +97,8 @@ const getReview = async (req, res, next) => {
           },
           {
             model: Artist,
-          }, "likes"
+          },
+          "likes",
         ],
       });
 
@@ -114,10 +115,11 @@ const getReview = async (req, res, next) => {
           },
           {
             model: Album,
-          }, "likes"
+          },
+          "likes",
         ],
       });
-      
+
       const allReviewSongs = await Review.findAll({
         where: {
           show: true,
@@ -131,7 +133,8 @@ const getReview = async (req, res, next) => {
           },
           {
             model: Song,
-          }, "likes"
+          },
+          "likes",
         ],
       });
 
@@ -180,32 +183,21 @@ const getResourceReviews = async (req, res, next) => {
             {
               model: Review,
               where: { show: true },
-              include: [{ model: User }],
+              include: [
+                "likes",
+                {
+                  model: User,
+                  include: ["followers", "following", "likes"],
+                },
+              ],
             },
           ],
         });
-        if (artistReviews) {
-          artistReviews = {
-            artistId: artistReviews.id,
-            name: artistReviews.name,
-            apiId: artistReviews.apiId,
-            reviews: artistReviews.reviews.map((r) => {
-              return {
-                reviewId: r.id,
-                title: r.title,
-                score: r.score,
-                description: r.description,
-                userId: r.userId,
-                userImg: r.user.userImg,
-                user: r.user.name,
-                userRole: r.user.role,
-              };
-            }),
-          };
-        } else {
+        if (!artistReviews) {
           return res.send("no hay reseñas");
+        } else {
+          return res.json(artistReviews);
         }
-        return res.json(artistReviews);
       case "album":
         let albumReviews = await Album.findOne({
           where: { apiId: id },
@@ -213,32 +205,21 @@ const getResourceReviews = async (req, res, next) => {
             {
               model: Review,
               where: { show: true },
-              include: [{ model: User }],
+              include: [
+                "likes",
+                {
+                  model: User,
+                  include: ["followers", "following", "likes"],
+                },
+              ],
             },
           ],
         });
-        if (albumReviews) {
-          albumReviews = {
-            albumId: albumReviews.id,
-            name: albumReviews.name,
-            apiId: albumReviews.id,
-            reviews: albumReviews.reviews.map((r) => {
-              return {
-                reviewId: r.id,
-                title: r.title,
-                score: r.score,
-                description: r.description,
-                userId: r.userId,
-                userImg: r.user.userImg,
-                user: r.user.name,
-                userRole: r.user.role,
-              };
-            }),
-          };
-        } else {
+        if (!albumReviews) {
           return res.send("no hay reseñas");
+        } else {
+          return res.json(albumReviews);
         }
-        return res.json(albumReviews);
       case "song":
         let songReviews = await Song.findOne({
           where: { apiId: id },
@@ -246,31 +227,20 @@ const getResourceReviews = async (req, res, next) => {
             {
               model: Review,
               where: { show: true },
-              include: [{ model: User }],
+              include: [
+                "likes",
+                {
+                  model: User,
+                  include: ["followers", "following", "likes"],
+                },
+              ],
             },
           ],
         });
-        if (songReviews) {
-          songReviews = {
-            songId: songReviews.id,
-            name: songReviews.name,
-            apiId: songReviews.id,
-            reviews: songReviews.reviews.map((r) => {
-              return {
-                reviewId: r.id,
-                title: r.title,
-                score: r.score,
-                description: r.description,
-                userId: r.userId,
-                userImg: r.user.userImg,
-                user: r.user.name,
-                userRole: r.user.role,
-              };
-            }),
-          };
-          return res.json(songReviews);
-        } else {
+        if (!songReviews) {
           return res.send("no hay reseñas");
+        } else {
+          return res.json(songReviews);
         }
       default:
         res.json({ error: "Información insuficiente" });
@@ -292,23 +262,22 @@ const deleteReview = async (req, res, next) => {
   }
 };
 
-
 const likeReview = async (req, res, next) => {
   try {
-      const{userId, reviewId} = req.params;
-      const userDb = await User.findByPk(userId);
-      const hasLike = await userDb.hasLikes(reviewId);
+    const { userId, reviewId } = req.params;
+    const userDb = await User.findByPk(userId);
+    const hasLike = await userDb.hasLikes(reviewId);
 
-      if (hasLike) {
-          await userDb.removeLikes(reviewId)
-          res.send("Diste dislike a esta review");
-      } else {
-          await userDb.addLikes(reviewId);
-          res.send("Diste like a esta review");
-      };
+    if (hasLike) {
+      await userDb.removeLikes(reviewId);
+      res.send("Diste dislike a esta review");
+    } else {
+      await userDb.addLikes(reviewId);
+      res.send("Diste like a esta review");
+    }
   } catch (error) {
-      next(error);
-  };
+    next(error);
+  }
 };
 module.exports = {
   crear,
@@ -317,5 +286,5 @@ module.exports = {
   getUserReview,
   getResourceReviews,
   deleteReview,
-  likeReview
+  likeReview,
 };
