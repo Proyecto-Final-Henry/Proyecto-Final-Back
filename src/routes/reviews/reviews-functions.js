@@ -7,41 +7,50 @@ const crear = async (req, res, next) => {
   try {
     const { title, score, description, userId, type, apiId, name } = req.body;
 
-    const userDb = await User.findByPk(userId);
-    const posts = await userDb.countReviews();
+    const userDb = await User.findByPk(userId, { include: Review });
 
-    if (userDb.role === "Base" && posts >= 5) {
-      return res.send(
-        "Ya ha alcanzado la cantidad maxima de reviews posibles para el servicio base"
-      );
-    }
+    let today = new Date();
+    let month = (today) => {
+      if (today.getMonth() + 1 >= 10) return `${today.getMonth() + 1}`;
+      else return `0${today.getMonth() + 1}`;
+    };
+    let date = `${today.getFullYear()}-${month(today)}-${today.getDate()}`;
 
-    const reviewCreated = await Review.create({
-      title,
-      score,
-      description,
+    const todayPosts = userDb.reviews.filter((r) => {
+      return r.createdAt == date;
     });
 
-    await userDb.addReview(reviewCreated.id);
+    if (userDb.role === "Gratuito" && todayPosts.length >= 5) {
+      return res.send("Ya ha alcanzado la cantidad máxima de reseñas para hoy");
+    } else {
+      const reviewCreated = await Review.create({
+        title,
+        score,
+        description,
+        createdAt: new Date(),
+      });
 
-    switch (type) {
-      case "song":
-        const { song } = await registerSong(name, apiId);
-        await song.addReview(reviewCreated.id);
-        break;
-      case "album":
-        const { album } = await registerAlbum(name, apiId);
-        await album.addReview(reviewCreated.id);
-        break;
-      case "artist":
-        const { artist } = await registerArtist(name, apiId);
-        await artist.addReview(reviewCreated.id);
-        break;
+      await userDb.addReview(reviewCreated.id);
+
+      switch (type) {
+        case "song":
+          const { song } = await registerSong(name, apiId);
+          await song.addReview(reviewCreated.id);
+          break;
+        case "album":
+          const { album } = await registerAlbum(name, apiId);
+          await album.addReview(reviewCreated.id);
+          break;
+        case "artist":
+          const { artist } = await registerArtist(name, apiId);
+          await artist.addReview(reviewCreated.id);
+          break;
+      }
+
+      await reviewCreated.reload();
+
+      res.send(reviewCreated);
     }
-
-    await reviewCreated.reload();
-
-    res.send(reviewCreated);
   } catch (error) {
     next(error);
   }
