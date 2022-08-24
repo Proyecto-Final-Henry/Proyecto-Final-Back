@@ -5,6 +5,14 @@ const createPlaylist = async (req, res, next) => {
     try {
         const { name, songs, userId } = req.body;
         const userDb = await User.findByPk(userId);
+        const userPlaylist = await userDb.countPlaylists({where: {
+            show: true
+          }})
+        console.log(userPlaylist)
+
+        if (userDb.role === "Gratuito" && userPlaylist >= 1) {
+            return res.send("Solo puedes tener una unica playlist siendo usuario Gratuito")
+        }
         if (userDb) {
             const playlistDb = await Playlist.create({
                 name
