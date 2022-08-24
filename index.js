@@ -21,7 +21,7 @@ const { server, serverSocketIo } = require("./src/app.js");
 const { conn } = require("./src/db.js");
 
 // Syncing all the models at once.
-conn.sync({ force: false }).then(() => {
+conn.sync({ force: true }).then(() => {
   serverSocketIo.listen(process.env.PORT, () => {
     console.log("==============================");
     console.log("       Live on port 3001");
