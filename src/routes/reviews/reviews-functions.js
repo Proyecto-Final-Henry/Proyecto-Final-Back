@@ -41,7 +41,7 @@ const crear = async (req, res, next) => {
 
     await reviewCreated.reload();
 
-    res.send(reviewCreated);
+    res.send("Reseña creada con éxito");
   } catch (error) {
     next(error);
   }
