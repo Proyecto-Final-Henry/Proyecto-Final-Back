@@ -82,19 +82,23 @@ const autenticar = async (req, res) => {
 
 const perfil = async (req, res) => {
   const usuario = req.usuario;
-  res.json({
-    id: usuario.id,
-    name: usuario.name,
-    userImg: usuario.userImg,
-    email: usuario.email,
-    role: usuario.role,
-    createdDate: usuario.createdDate,
-    userImg: usuario.userImg,
-    reviews: usuario.reviews,
-    followers: usuario.followers,
-    following: usuario.following,
-    active: usuario.active,
-  });
+  try {
+    res.json({
+      id: usuario.id,
+      name: usuario.name,
+      userImg: usuario.userImg,
+      email: usuario.email,
+      role: usuario.role,
+      createdDate: usuario.createdDate,
+      userImg: usuario.userImg,
+      reviews: usuario.reviews,
+      followers: usuario.followers,
+      following: usuario.following,
+      active: usuario.active,
+    });
+  } catch (error) {
+    console.log(error);
+  };
 };
 
 const olvidePassword = async (req, res) => {
@@ -105,7 +109,7 @@ const olvidePassword = async (req, res) => {
   if (!usuarioExiste) {
     const error = new Error("El usuario no existe");
     return res.status(400).json({ msg: error.message });
-  }
+  };
 
   try {
     usuarioExiste.token = generarId();
@@ -119,12 +123,11 @@ const olvidePassword = async (req, res) => {
     res.json({ msg: "Hemos enviado el mail con las instrucciones" });
   } catch (error) {
     console.log(error);
-  }
+  };
 };
 
 const comprobarToken = async (req, res) => {
   const { token } = req.params;
-
   const tokenValido = await User.findOne({ where: { token: token } });
 
   if (tokenValido) {
@@ -132,7 +135,7 @@ const comprobarToken = async (req, res) => {
   } else {
     const error = new Error("Token no valido");
     return res.status(400).json({ msg: error.message });
-  }
+  };
 };
 
 const nuevaPassword = async (req, res) => {
@@ -144,7 +147,7 @@ const nuevaPassword = async (req, res) => {
   if (!usuario) {
     const error = new Error("Hubo un error");
     return res.status(400).json({ msg: error.message });
-  }
+  };
   try {
     usuario.token = null;
     usuario.password = await bcrypt.hash(password, 10);
@@ -152,7 +155,7 @@ const nuevaPassword = async (req, res) => {
     res.json({ msg: "Contraseña modificada correctamente" });
   } catch (error) {
     console.log(error);
-  }
+  };
 };
 
 mercadopago.configure({
@@ -196,7 +199,7 @@ const crearPagoMELI = async (req, res) => {
     res.json({ id: response.body });
   } catch (error) {
     console.log(error);
-  }
+  };
 };
 
 const baseApremium = async (req, res) => {
@@ -215,7 +218,7 @@ const baseApremium = async (req, res) => {
     }
   } else {
     res.redirect(`https://proyecto-final-front-tau.vercel.app/feed`); // https://proyecto-final-front-tau.vercel.app
-  }
+  };
 };
 
 const googleLogin = async (req, res) => {
@@ -241,8 +244,8 @@ const googleLogin = async (req, res) => {
       return res.status(410).json({ msg: error.message });
     } else {
       return res.json(usuario);
-    }
-  }
+    };
+  };
   try {
     const nuevoUsuario = await User.create(req.body);
     nuevoUsuario.token = generarJWT(nuevoUsuario.email);
