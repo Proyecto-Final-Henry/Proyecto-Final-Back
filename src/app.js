@@ -13,7 +13,7 @@ const searchRoutes  = require('./routes/search/search-routes');
 const userRoutes = require("./routes/user/user-routes");
 const chatRoutes = require('./routes/Chat/ChatRoutes.js');
 const mensajeRoutes = require('./routes/Mensajes/MensajesRoutes.js');
-const { Server } = require("socket.io")
+const { Server } = require("socket.io");
 const http = require("http");
 const playlistRoutes = require("./routes/playlist/playlist-routes");
 
@@ -27,8 +27,53 @@ const io = new Server(serverSocketIo , {
   }
 })
 
+let onlineUsers = [];
 
-let activeUsers = []
+const addNewUser = (username, socketId) => {
+  !onlineUsers.some((user) => user.username === username) &&
+    onlineUsers.push({ username, socketId });
+};
+
+const removeUser = (socketId) => {
+  onlineUsers = onlineUsers.filter((user) => user.socketId !== socketId);
+};
+
+const getUser = (username) => {
+  return onlineUsers.find((user) => user.username === username);
+};
+
+
+io.on("connection", (socket) => {
+  socket.on("newUser", (username) => {
+    addNewUser(username, socket.id);
+    console.log("Usuarios conectados", onlineUsers)
+  });
+
+  socket.on("sendNotification", ({ senderName, receiverName, type, title }) => {
+    console.log(senderName, receiverName, type)
+    const receiver = getUser(receiverName);
+    console.log(receiver)
+    io.to(receiver.socketId).emit("getNotification", {
+      senderName,
+      type,
+      title
+    });
+  });
+
+  socket.on("sendText", ({ senderName, receiverName, text }) => {
+    const receiver = getUser(receiverName);
+    io.to(receiver.socketId).emit("getText", {
+      senderName,
+      text,
+    });
+  });
+
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
+});
+
+let activeUsers = [];
 
 io.on("connection", (socket) => {
   
@@ -59,7 +104,7 @@ io.on("connection", (socket) => {
     io.emit("get-users", activeUsers)
   })
 
-})
+});
 
 server.name = "API";
 
@@ -88,8 +133,8 @@ server.use('/api/back-end/genres', genresRoutes);
 server.use('/api/back-end/artists', artistsRoutes);
 server.use('/api/back-end/albums', albumsRoutes);
 server.use('/api/back-end/search', searchRoutes);
-server.use('/api/back-end/chat', chatRoutes)
-server.use('/api/back-end/mensajes', mensajeRoutes)
+server.use('/api/back-end/chat', chatRoutes);
+server.use('/api/back-end/mensajes', mensajeRoutes);
 
 // Error catching endware.
 server.use((err, req, res, next) => {

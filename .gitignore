@@ -1,3 +1,4 @@
+node_modules
 .env
 node_modules
 node_modules/.package-lock.json
@@ -9709,6 +9710,7 @@ node_modules/verror/node_modules/core-util-is/package.json
 node_modules/verror/node_modules/core-util-is/README.md
 node_modules/verror/node_modules/core-util-is/test.js
 node_modules/verror/node_modules/core-util-is/lib/util.js
+.gitignore
 node_modules/.bin/acorn
 node_modules/.bin/acorn.cmd
 node_modules/.bin/acorn.ps1
@@ -12091,3 +12093,4 @@ node_modules/xregexp/README.md
 node_modules/xregexp/xregexp-all.js
 node_modules/xregexp/tests/node-qunit.js
 node_modules/xregexp/tests/tests.js
+>>>>>>> b9da6cbbf43b6d39e98ceb91d0d22b6882c12b0a
