@@ -45,11 +45,9 @@ const crear = async (req, res, next) => {
           const { artist } = await registerArtist(name, apiId);
           await artist.addReview(reviewCreated.id);
           break;
-      }
-
+      };
       await reviewCreated.reload();
-
-      res.send(reviewCreated);
+      res.send("Reseña creada con éxito");
     }
   } catch (error) {
     next(error);
