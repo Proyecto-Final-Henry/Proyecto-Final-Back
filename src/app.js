@@ -16,6 +16,8 @@ const mensajeRoutes = require('./routes/Mensajes/MensajesRoutes.js');
 const { Server } = require("socket.io");
 const http = require("http");
 const playlistRoutes = require("./routes/playlist/playlist-routes");
+const jwt = require ("jsonwebtoken");
+const { User, Review } = require("./db.js");
 
 require("./db.js");
 
@@ -44,8 +46,9 @@ const getUser = (username) => {
 
 
 io.on("connection", (socket) => {
-  socket.on("newUser", (username) => {
-    addNewUser(username, socket.id);
+  socket.on("newUser", async (token) => {
+    const respuesta = await tokenToId(token)
+    addNewUser(respuesta.id, socket.id);
     console.log("Usuarios conectados", onlineUsers)
   });
 
@@ -75,13 +78,27 @@ io.on("connection", (socket) => {
 
 let activeUsers = [];
 
+const tokenToId = async (token) => {
+  try {
+    const decodificarToken = jwt.verify(token , process.env.JWT_SECRET)
+    const usuario = await User.findOne({where: {email: decodificarToken.email}})
+    return usuario
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 io.on("connection", (socket) => {
   
   // agregar nuevo usuario
-  socket.on("new-user-add",(newUserId) => {
-    if(!activeUsers.some(user => user.userId === newUserId && newUserId)){
+  socket.on("new-user-add",async (token) => {
+
+   const respuesta = await tokenToId(token)
+  //  console.log(respuesta)
+  
+    if(!activeUsers.some(user => user.userId === respuesta.id && respuesta.id)){
       activeUsers.push({
-        userId: newUserId,
+        userId: respuesta.id,
         socketId: socket.id
       })
     }
