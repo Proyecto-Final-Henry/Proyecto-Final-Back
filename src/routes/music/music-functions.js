@@ -112,11 +112,11 @@ async function getSongDetail(req, res, next) {
         title: result.data.title,
         preview: result.data.preview,
         duration: result.data.duration,
-        artist: result.data.artist.name,
-        artistId: result.data.artist.id,
-        image: result.data.album.cover_big,
-        album: result.data.album.title,
-        albumId: result.data.album.id,
+        artist: result.data.artist?.name,
+        artistId: result.data.artist?.id,
+        image: result.data.album?.cover_big,
+        album: result.data.album?.title,
+        albumId: result.data.album?.id,
       };
       return res.json(song);
     } catch (err) {

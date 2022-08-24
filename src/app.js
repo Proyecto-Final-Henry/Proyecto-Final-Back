@@ -45,7 +45,6 @@ const getUser = (username) => {
   return onlineUsers.find((user) => user.username === username);
 };
 
-
 io.on("connection", (socket) => {
   socket.on("newUser", async (token) => {
     const respuesta = await tokenToId(token)
@@ -53,14 +52,18 @@ io.on("connection", (socket) => {
     console.log("Usuarios conectados", onlineUsers)
   });
 
-  socket.on("sendNotification", ({ senderName, receiverName, type, title }) => {
+  socket.on("sendNotification", async ({ senderName, receiverName, type, title }) => { 
     console.log(senderName, receiverName, type)
-    const receiver = getUser(receiverName);
-    io.to(receiver.socketId).emit("getNotification", {
-      senderName,
-      type,
-      title
-    });
+    try {
+      const receiver = await getUser(receiverName);
+      io.to(receiver.socketId).emit("getNotification", {
+        senderName,
+        type,
+        title
+      });
+    } catch (error) {
+      console.log(error)
+    };
   });
 
   socket.on("sendText", ({ senderName, receiverName, text }) => {

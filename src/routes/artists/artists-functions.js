@@ -151,7 +151,7 @@ async function createTopArtists(req, res, next) {
     if (!topArtistFind.length) {
       for (let a = 0; a < 5; a++) {
         const response = await axios.get(`https://api.deezer.com/genre/${a}/artists`)
-        for (let i = 0; i < response.data.data.length; i++) {
+        for (let i = 0; i < response.data?.data?.length; i++) {
           if (response.data.data) {
             let topArtist = await Artist.create({
               apiId: response.data.data[i].id,
