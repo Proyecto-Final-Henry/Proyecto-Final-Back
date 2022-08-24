@@ -41,6 +41,7 @@ const removeUser = (socketId) => {
 };
 
 const getUser = (username) => {
+  console.log(onlineUsers)
   return onlineUsers.find((user) => user.username === username);
 };
 
@@ -55,7 +56,6 @@ io.on("connection", (socket) => {
   socket.on("sendNotification", ({ senderName, receiverName, type, title }) => {
     console.log(senderName, receiverName, type)
     const receiver = getUser(receiverName);
-    console.log(receiver)
     io.to(receiver.socketId).emit("getNotification", {
       senderName,
       type,
