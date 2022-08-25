@@ -81,9 +81,9 @@ const autenticar = async (req, res) => {
 };
 
 const perfil = async (req, res) => {
-  const usuario = req.usuario;
+  const usuario = await req.usuario;
   try {
-    res.json({
+    await res.json({
       id: usuario.id,
       name: usuario.name,
       userImg: usuario.userImg,
