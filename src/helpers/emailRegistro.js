@@ -43,7 +43,7 @@ const emailRegistro =  async (data) => {
             <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
             <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
          `
-};
+    };
     await sgMail.send(msg);   
     console.log("MENSAJE ENVIADO CORRECTAMENTE");
 };
@@ -79,6 +79,42 @@ const emailContact = async (data) => {
     await sgMail.send(msg);  
 }; 
 
-module.exports = { emailRegistro, emailContact };
+const emailNotificacions = async (data) => {
+    // Configuracion
+    const transport = nodemailer.createTransport({
+        host: process.env.EMAIL_HOST,
+        port: process.env.EMAIL_PORT,
+        // secure: true,
+        auth: {
+            user: process.env.EMAIL_USER,
+            pass: process.env.EMAIL_PASS
+        }
+    });
+    
+    //Envio de Email
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const {email, nameUser, nameFollow} = data;
+    const msg = {
+        from: "ReMusic",
+        to: email,
+        subject: "Mensaje de seguidores",
+        html: `
+            Hola <b> ${nameUser} </b>, te comunicamos que ${nameFollow} comenso a seguirte.
+        `
+    };
+    await sgMail.send(msg);  
+
+    // await transport.sendMail({
+    //     from: "ReMusic",
+    //     to: email,
+    //     subject: "Mensaje de seguidores",
+    //     html: `
+    //     Hola <b> ${nameUser} </b>, te comunicamos que ${nameFollow} comenzo a seguirte.
+    //     `
+    // });
+
+}; 
+
+module.exports = { emailRegistro, emailContact,emailNotificacions };
 
 
