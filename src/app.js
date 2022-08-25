@@ -102,7 +102,7 @@ io.on("connection", (socket) => {
   socket.on("new-user-add",async (token) => {
 
    const respuesta = await tokenToId(token)
-  //  console.log(respuesta)
+    console.log(respuesta.id)
   
     if(!activeUsers.some(user => user.userId === respuesta.id && respuesta.id)){
       activeUsers.push({

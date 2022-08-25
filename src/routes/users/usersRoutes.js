@@ -18,6 +18,7 @@ const {
   takeAdmin,
   givePremium,
   takePremium,
+  pruebaEmail,
 } = require("./FuncionesUsers.js");
 const { checkAutenticacion } = require("../../middleware/authMiddleware");
 const usersRoutes = express.Router();
@@ -57,6 +58,8 @@ usersRoutes.put("/takepremium", takePremium);
 usersRoutes.put("/giveadmin", giveAdmin);
 
 usersRoutes.put("/takeadmin", takeAdmin);
+
+usersRoutes.post("/prueba", pruebaEmail);
 
 usersRoutes.get("*", (req, res) => {
   res.send("Ruta invalida, revisa el nombre de la ruta");
