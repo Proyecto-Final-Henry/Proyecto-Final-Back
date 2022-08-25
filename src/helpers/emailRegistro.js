@@ -66,7 +66,7 @@ const emailContact = async (data) => {
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const {email,name,message} = data;
     const msg = {
-        from: "ReMusic",
+        from: "music_app@tmails.net",
         to: emailContact2,
         subject: "Mensaje de contacto",
         html: `
@@ -81,25 +81,25 @@ const emailContact = async (data) => {
 
 const emailNotificacions = async (data) => {
     // Configuracion
-    const transport = nodemailer.createTransport({
-        host: process.env.EMAIL_HOST,
-        port: process.env.EMAIL_PORT,
-        // secure: true,
-        auth: {
-            user: process.env.EMAIL_USER,
-            pass: process.env.EMAIL_PASS
-        }
-    });
+    // const transport = nodemailer.createTransport({
+    //     host: process.env.EMAIL_HOST,
+    //     port: process.env.EMAIL_PORT,
+    //     // secure: true,
+    //     auth: {
+    //         user: process.env.EMAIL_USER,
+    //         pass: process.env.EMAIL_PASS
+    //     }
+    // });
     
     //Envio de Email
     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
     const {email, nameUser, nameFollow} = data;
     const msg = {
-        from: "ReMusic",
+        from: "music_app@tmails.net",
         to: email,
         subject: "Mensaje de seguidores",
         html: `
-            Hola <b> ${nameUser} </b>, te comunicamos que ${nameFollow} comenso a seguirte.
+            Hola <b> ${nameUser} </b>, te comunicamos que ${nameFollow} comenzó a seguirte.
         `
     };
     await sgMail.send(msg);  
