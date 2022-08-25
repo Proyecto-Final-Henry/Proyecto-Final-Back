@@ -272,8 +272,9 @@ const deleteReview = async (req, res, next) => {
 const likeReview = async (req, res, next) => {
   try {
     const { userId, reviewId } = req.params;
-    const userDb = await User.findByPk(userId);
-    const hasLike = await userDb?.hasLikes(reviewId);
+    const userDb = await User.findOne({where: {id:userId}}); // findByPk(userId)
+    console.log("USUARIO", userDb)
+    const hasLike = await userDb.hasLikes(reviewId);
     if (hasLike) {
       await userDb.removeLikes(reviewId);
       res.send("Quitaste tu a esta review");
