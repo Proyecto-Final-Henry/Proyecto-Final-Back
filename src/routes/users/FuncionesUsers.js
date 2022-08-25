@@ -7,6 +7,7 @@ const { generarJWT } = require("../../helpers/generarJWT");
 const { generarId } = require("../../helpers/generarId.js");
 const mercadopago = require("mercadopago");
 const { cloudinary } = require("../../helpers/cloudinary");
+const { emailNoti } = require("../../helpers/emailNotificacion.js");
 const { FRONTEND_URL, BACKEND_URL } = process.env;
 
 const registrar = async (req, res) => {
@@ -422,6 +423,17 @@ const takeAdmin = async (req, res, next) => {
   }
 };
 
+const pruebaEmail = async (req,res) => {
+  console.log(req.body)
+  const { email , name } = req.body
+  try {
+    emailNoti({email,name})
+    res.json({msg: "Enviado correctamente"})
+  } catch (error) {
+    console.log(error)
+  }
+}
+
 module.exports = {
   registrar,
   confirmar,
@@ -441,4 +453,5 @@ module.exports = {
   takePremium,
   giveAdmin,
   takeAdmin,
+  pruebaEmail,
 };
