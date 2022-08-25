@@ -274,16 +274,24 @@ const likeReview = async (req, res, next) => {
     const { userId, reviewId } = req.params;
     const userDb = await User.findOne({where: {id:userId}}); // findByPk(userId)
     console.log("USUARIO", userDb)
-    const hasLike = await userDb.hasLikes(reviewId);
-    if (hasLike) {
-      await userDb.removeLikes(reviewId);
-      res.send("Quitaste tu a esta review");
+    if (userDb) {
+      try {
+        const hasLike = await userDb.hasLikes(reviewId);
+        if (hasLike) {
+          await userDb.removeLikes(reviewId);
+          res.send("Quitaste tu a esta review");
+        } else {
+          await userDb.addLikes(reviewId);
+          res.send("Diste like a esta review");
+        }
+      } catch (error) {
+        console.log(error)
+      }
     } else {
-      await userDb.addLikes(reviewId);
-      res.send("Diste like a esta review");
+      res.status(404).json("Usuario no encontrado");
     }
   } catch (error) {
-    next(error);
+    console.log(error);
   };
 };
 
