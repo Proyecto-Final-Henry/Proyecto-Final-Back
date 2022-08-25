@@ -45,10 +45,22 @@ const getUser = (username) => {
   return onlineUsers.find((user) => user.username === username);
 };
 
+let activeUsers = [];
+
+const tokenToId = async (token) => {
+  try {
+    const decodificarToken = jwt.verify(token , process.env.JWT_SECRET)
+    const usuario = await User.findOne({where: {email: decodificarToken.email}})
+    return usuario
+  } catch (error) {
+    console.log(error)
+  };
+};
+
 io.on("connection", (socket) => {
   socket.on("newUser", async (token) => {
     const respuesta = await tokenToId(token)
-    addNewUser(respuesta.id, socket.id);
+    addNewUser(respuesta.dataValues.id, socket.id);
     console.log("Usuarios conectados", onlineUsers)
   });
 
@@ -78,18 +90,6 @@ io.on("connection", (socket) => {
   //   removeUser(socket.id);
   // });
 });
-
-let activeUsers = [];
-
-const tokenToId = async (token) => {
-  try {
-    const decodificarToken = jwt.verify(token , process.env.JWT_SECRET)
-    const usuario = await User.findOne({where: {email: decodificarToken.email}})
-    return usuario
-  } catch (error) {
-    console.log(error)
-  }
-}
 
 io.on("connection", (socket) => {
   // agregar nuevo usuario
