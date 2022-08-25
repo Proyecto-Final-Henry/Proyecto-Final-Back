@@ -60,7 +60,7 @@ const tokenToId = async (token) => {
 io.on("connection", (socket) => {
   socket.on("newUser", (username) => {
     // const respuesta = await tokenToId(token)
-    console.log("RESPUESTA", respuesta)
+    console.log("MILAGRO")
     addNewUser({username:username, socketId:socket.id});
     console.log("Usuarios conectados", onlineUsers)
   });
