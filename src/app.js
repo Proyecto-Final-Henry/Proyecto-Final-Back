@@ -13,6 +13,7 @@ const searchRoutes  = require('./routes/search/search-routes');
 const userRoutes = require("./routes/user/user-routes");
 const chatRoutes = require('./routes/Chat/ChatRoutes.js');
 const mensajeRoutes = require('./routes/Mensajes/MensajesRoutes.js');
+const notifications = require('./routes/notificacions/notificacions-routes.js');
 const { Server } = require("socket.io");
 const http = require("http");
 const playlistRoutes = require("./routes/playlist/playlist-routes");
@@ -160,6 +161,7 @@ server.use('/api/back-end/albums', albumsRoutes);
 server.use('/api/back-end/search', searchRoutes);
 server.use('/api/back-end/chat', chatRoutes);
 server.use('/api/back-end/mensajes', mensajeRoutes);
+server.use('/api/back-end/notifications', notifications);
 
 // Error catching endware.
 server.use((err, req, res, next) => {
