@@ -68,11 +68,16 @@ io.on("connection", (socket) => {
     console.log(senderName, receiverName, type)
     try {
       const receiver = await getUser(receiverName);
-      io.to(receiver.socketId).emit("getNotification", {
-        senderName,
-        type,
-        title
-      });
+      console.log("receiver", receiver)
+      try {
+        io.to(receiver.socketId).emit("getNotification", {
+          senderName,
+          type,
+          title
+        });
+      } catch (error) {
+        console.log(error)
+      }
     } catch (error) {
       console.log(error)
     };
@@ -86,9 +91,9 @@ io.on("connection", (socket) => {
     });
   });
 
-  // socket.on("disconnect", () => {
-  //   removeUser(socket.id);
-  // });
+  socket.on("disconnect", () => {
+    removeUser(socket.id);
+  });
 });
 
 io.on("connection", (socket) => {
