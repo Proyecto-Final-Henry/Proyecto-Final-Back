@@ -273,19 +273,19 @@ const likeReview = async (req, res, next) => {
   try {
     const { userId, reviewId } = req.params;
     const userDb = await User.findByPk(userId);
-    const hasLike = await userDb.hasLikes(reviewId);
-
+    const hasLike = await userDb?.hasLikes(reviewId);
     if (hasLike) {
       await userDb.removeLikes(reviewId);
-      res.send("Diste dislike a esta review");
+      res.send("Quitaste tu a esta review");
     } else {
       await userDb.addLikes(reviewId);
       res.send("Diste like a esta review");
     }
   } catch (error) {
     next(error);
-  }
+  };
 };
+
 module.exports = {
   crear,
   modificar,
