@@ -16,7 +16,7 @@ const crear = async (req, res, next) => {
     };
     let date = `${today.getFullYear()}-${month(today)}-${today.getDate()}`;
 
-    const todayPosts = userDb.reviews.filter((r) => {
+    const todayPosts = userDb.reviews?.filter((r) => {
       return r.createdAt == date;
     });
 
