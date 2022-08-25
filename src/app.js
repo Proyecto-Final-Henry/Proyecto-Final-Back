@@ -99,11 +99,7 @@ io.on("connection", (socket) => {
 
 io.on("connection", (socket) => {
   // agregar nuevo usuario
-  socket.on("new-user-add", (userId) => {
-
-  //  const respuesta = await tokenToId(token)
-  //  console.log(respuesta)
-  
+  socket.on("new-user-add", (userId) => {  
     if(!activeUsers.some(user => user.userId === userId && userId)){
       activeUsers.push({
         userId: userId,
