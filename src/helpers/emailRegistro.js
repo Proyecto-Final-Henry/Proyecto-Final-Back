@@ -112,7 +112,6 @@ const emailNotificacions = async (data) => {
     //     Hola <b> ${nameUser} </b>, te comunicamos que ${nameFollow} comenzo a seguirte.
     //     `
     // });
-
 }; 
 
 module.exports = { emailRegistro, emailContact,emailNotificacions };
