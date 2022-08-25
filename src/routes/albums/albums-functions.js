@@ -113,6 +113,26 @@ async function getgenres(req, res, next) {
     genre = "Techno/House"
   };
 
+  if (genre === "Techno" || genre === "House") {
+    genre = "Techno/House"
+  };
+
+  if (genre === "Brazilian Music") {
+    genre = "Música Brasileña"
+  };
+
+  if (genre === "African Music") {
+    genre = "Música Africana"
+  };
+
+  if (genre === "Asian Music") {
+    genre = "Música Asiática"
+  };
+  
+  if (genre === "Indian Music") {
+    genre = "Música de La India"
+  };
+
   let genreFind = await Album.findAll({
     include: {
       model: Genre,

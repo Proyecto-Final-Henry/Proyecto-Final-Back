@@ -14,39 +14,39 @@ const emailRegistro =  async (data) => {
         }
     });
 
-    //Envio de Email
-    const {email,name,token} = data
-    const info = await transport.sendMail({
-        from: "ReMusic",
-        to: email,
-        subject: "Comprueba tu cuenta en ReMusic",
-        text: "Comprueba tu cuenta en ReMusic",
-        html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
-        <p> Tu cuenta ya esta lista, solo debes comprobarla en el siguiente enlace:
-        <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
-        <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
-        `
-    })
-    console.log("Mensaje enviado: %s", info.messageId)
-    };
+    //Envio de Email mailtrap
+    // const {email,name,token} = data
+    // const info = await transport.sendMail({
+    //     from: "ReMusic",
+    //     to: email,
+    //     subject: "Comprueba tu cuenta en ReMusic",
+    //     text: "Comprueba tu cuenta en ReMusic",
+    //     html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
+    //     <p> Tu cuenta ya esta lista, solo debes comprobarla en el siguiente enlace:
+    //     <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
+    //     <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
+    //     `
+    // })
+    // console.log("Mensaje enviado: %s", info.messageId)
+    // };
 
     //¡¡¡¡¡¡¡¡¡¡¡ENVIO DE EMAIL REALES!!!!!!!!!!!!!!! NO BORRARR!!!!!!!
-//     const {email,name,token} = data 
-//     sgMail.setApiKey(process.env.SENDGRID_API_KEY);
-//     const msg = {
-//     to: email,
-//     from: 'music_app@tmails.net',
-//     subject: 'Comprueba tu cuenta en ReMusic',
-//     text: 'Comprueba tu cuenta en ReMusic',
-//     html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
-//             <p> Tu cuenta ya esta lista, solo debes comprobarla con el siguiente enlace:
-//             <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
-//             <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
-//          `
-// };
-//     await sgMail.send(msg);   
-//     console.log("MENSAJE ENVIADO CORRECTAMENTE");
-// };
+    const {email,name,token} = data 
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const msg = {
+    to: email,
+    from: 'music_app@tmails.net',
+    subject: 'Comprueba tu cuenta en ReMusic',
+    text: 'Comprueba tu cuenta en ReMusic',
+    html: `<p>Hola ${name}, comprueba tu cuenta en ReMusic.</p>
+            <p> Tu cuenta ya esta lista, solo debes comprobarla con el siguiente enlace:
+            <a href="${process.env.FRONTEND_URL}/confirmar/${token}">Comprobar Cuenta</a> </p>
+            <p> Si tu no creaste esta cuenta puedes ignorar este mensaje</p>
+         `
+};
+    await sgMail.send(msg);   
+    console.log("MENSAJE ENVIADO CORRECTAMENTE");
+};
 
 const emailContact = async (data) => {
     // Configuracion
@@ -61,11 +61,13 @@ const emailContact = async (data) => {
     });
     
     //Envio de Email
-    const emailContact = 'cjfernandez29@gmail.com'; // Email unificado nuevo
-    const {email,name,message} = data
-    const info = await transport.sendMail({
+    const emailContact = 'cjfernandez29@gmail.com'
+    const emailContact2 = 'julianlechuga12@gmail.com';
+    sgMail.setApiKey(process.env.SENDGRID_API_KEY);
+    const {email,name,message} = data;
+    const msg = {
         from: "ReMusic",
-        to: emailContact,
+        to: emailContact2,
         subject: "Mensaje de contacto",
         html: `
             <b> Mensaje del formulario de Contacto </b>
@@ -73,7 +75,8 @@ const emailContact = async (data) => {
             <div><b>Email:</b> ${email}</div>
             <div><b>Mensaje:</b> ${message}</div>
         `
-    });
+    };
+    await sgMail.send(msg);  
 }; 
 
 module.exports = { emailRegistro, emailContact };

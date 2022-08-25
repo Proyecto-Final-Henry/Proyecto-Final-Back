@@ -92,7 +92,6 @@ Review.belongsTo(Artist);
 Review.belongsToMany(User, {as: "likes", through: "Reviews_likes", timestamps: false})
 User.belongsToMany(Review, {as: "likes", through: "Reviews_likes", timestamps: false})
 
-
 Playlist.belongsToMany(Song, { through: "Playlist_Songs", timestamps: false });
 // Playlist.hasMany(Song);
 Playlist.belongsTo(User);

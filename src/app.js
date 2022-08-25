@@ -41,26 +41,47 @@ const removeUser = (socketId) => {
 };
 
 const getUser = (username) => {
+  console.log(onlineUsers)
   return onlineUsers.find((user) => user.username === username);
 };
 
+let activeUsers = [];
+
+const tokenToId = async (token) => {
+  try {
+    const decodificarToken = jwt.verify(token , process.env.JWT_SECRET)
+    const usuario = await User.findOne({where: {email: decodificarToken.email}})
+    return usuario
+  } catch (error) {
+    console.log(error)
+  };
+};
 
 io.on("connection", (socket) => {
-  socket.on("newUser", async (token) => {
-    const respuesta = await tokenToId(token)
-    addNewUser(respuesta.id, socket.id);
+  socket.on("newUser", (username) => {
+    // const respuesta = await tokenToId(token)
+    console.log("MILAGRO")
+    addNewUser({username:username, socketId:socket.id});
     console.log("Usuarios conectados", onlineUsers)
   });
 
-  socket.on("sendNotification", ({ senderName, receiverName, type, title }) => {
+  socket.on("sendNotification", async ({ senderName, receiverName, type, title }) => { 
     console.log(senderName, receiverName, type)
-    const receiver = getUser(receiverName);
-    console.log(receiver)
-    io.to(receiver.socketId).emit("getNotification", {
-      senderName,
-      type,
-      title
-    });
+    try {
+      const receiver = await getUser(receiverName);
+      console.log("receiver", receiver)
+      try {
+        io.to(receiver.socketId).emit("getNotification", {
+          senderName,
+          type,
+          title
+        });
+      } catch (error) {
+        console.log(error)
+      }
+    } catch (error) {
+      console.log(error)
+    };
   });
 
   socket.on("sendText", ({ senderName, receiverName, text }) => {
@@ -76,20 +97,7 @@ io.on("connection", (socket) => {
   });
 });
 
-let activeUsers = [];
-
-const tokenToId = async (token) => {
-  try {
-    const decodificarToken = jwt.verify(token , process.env.JWT_SECRET)
-    const usuario = await User.findOne({where: {email: decodificarToken.email}})
-    return usuario
-  } catch (error) {
-    console.log(error)
-  }
-}
-
 io.on("connection", (socket) => {
-  
   // agregar nuevo usuario
   socket.on("new-user-add",async (token) => {
 
