@@ -61,7 +61,7 @@ io.on("connection", (socket) => {
   socket.on("newUser", (username) => {
     // const respuesta = await tokenToId(token)
     console.log("MILAGRO")
-    addNewUser({username:username, socketId:socket.id});
+    addNewUser(username, socket.id);
     console.log("Usuarios conectados", onlineUsers)
   });
 
@@ -99,14 +99,14 @@ io.on("connection", (socket) => {
 
 io.on("connection", (socket) => {
   // agregar nuevo usuario
-  socket.on("new-user-add",async (token) => {
+  socket.on("new-user-add", (userId) => {
 
-   const respuesta = await tokenToId(token)
+  //  const respuesta = await tokenToId(token)
   //  console.log(respuesta)
   
-    if(!activeUsers.some(user => user.userId === respuesta.id && respuesta.id)){
+    if(!activeUsers.some(user => user.userId === userId && userId)){
       activeUsers.push({
-        userId: respuesta.id,
+        userId: userId,
         socketId: socket.id
       })
     }
