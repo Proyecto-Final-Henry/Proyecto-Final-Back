@@ -6,7 +6,6 @@ const follow = async (req, res, next) => {
         const{userId, followId} = req.params;
         const userDb = await User.findByPk(userId);
         const hasFollow = await userDb.hasFollowing(followId);
-
         if (hasFollow) {
             res.send("Ya sigues a este usuario");
         } else {
